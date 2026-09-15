@@ -1,6 +1,5 @@
 .intro {
   position: relative;
-  container-type: inline-size;
   min-height: 100dvh;
   overflow: hidden;
   display: flex;
@@ -52,7 +51,7 @@
 
 .intro__blob {
   position: absolute;
-  top: -64.32cqw;
+  top: calc(min(100vw, 460px) * -0.6432);
   left: -84%;
   width: 223.3%;
   aspect-ratio: 1 / 1;

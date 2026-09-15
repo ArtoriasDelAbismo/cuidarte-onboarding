@@ -1,6 +1,5 @@
 .registro {
   position: relative;
-  container-type: inline-size;
   min-height: 100dvh;
   overflow: hidden;
   background: var(--brand-secondary-2);
@@ -10,7 +9,7 @@
 
 .registro__blob {
   position: absolute;
-  top: -255.34cqw;
+  top: calc(min(100vw, 460px) * -2.5534);
   left: 50%;
   width: 307%;
   aspect-ratio: 1 / 1;
@@ -60,6 +59,8 @@
   color: var(--gray);
   background: transparent;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .registro__field:focus {

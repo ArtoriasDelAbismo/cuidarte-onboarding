@@ -1,6 +1,5 @@
 .home {
   position: relative;
-  container-type: inline-size;
   min-height: 100dvh;
   overflow: hidden;
   background: var(--brand-secondary-2);
@@ -10,7 +9,7 @@
 
 .home__blob {
   position: absolute;
-  top: -63.59cqw;
+  top: calc(min(100vw, 460px) * -0.6359);
   left: 50%;
   transform: translateX(-50%);
   width: 307%;
