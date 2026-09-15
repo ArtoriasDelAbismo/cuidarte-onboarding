@@ -53,7 +53,9 @@ export default function Intro() {
 
       {(phase === 'welcome' || phase === 'exiting') && (
         <>
-          <img className="intro__blob" src={blobWelcome} alt="" aria-hidden="true" />
+          <div className="intro__blob-mask">
+            <img className="intro__blob" src={blobWelcome} alt="" aria-hidden="true" />
+          </div>
           <img className="intro__top-logo" src={logoCompact} alt="Cuidarte.ia" />
           <div className="intro__content">
             <h1 className="intro__headline">
