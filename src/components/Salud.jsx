@@ -24,6 +24,7 @@ import videoTemperatura from '../assets/videos/salud/temperatura.mp4'
 import videoEcg from '../assets/videos/salud/ecg.mp4'
 
 import VideoModal from './VideoModal.jsx'
+import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const WIDE_CARD = {
   key: 'presion-arterial',
@@ -46,6 +47,11 @@ export default function Salud() {
   const [activeKey, setActiveKey] = useState(null)
   const activeCard = ALL_CARDS.find((card) => card.key === activeKey)
 
+  function openVideo(key) {
+    setActiveKey(key)
+    notifyVideoOpened(key)
+  }
+
   return (
     <div className="salud">
       <img className="salud__blob" src={blob} alt="" aria-hidden="true" />
@@ -56,7 +62,7 @@ export default function Salud() {
         <button
           type="button"
           className="salud__card salud__card--wide"
-          onClick={() => setActiveKey(WIDE_CARD.key)}
+          onClick={() => openVideo(WIDE_CARD.key)}
         >
           <div className="salud__card-icons">
             <img src={iconPresionArterial} alt="" aria-hidden="true" />
@@ -71,7 +77,7 @@ export default function Salud() {
               key={card.key}
               type="button"
               className="salud__card"
-              onClick={() => setActiveKey(card.key)}
+              onClick={() => openVideo(card.key)}
             >
               <img src={card.icon} alt="" aria-hidden="true" />
               <span>{card.label}</span>
