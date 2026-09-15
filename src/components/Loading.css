@@ -1,0 +1,38 @@
+.loading {
+  position: relative;
+  min-height: 100dvh;
+  background: var(--brand-1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading__blob {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220%;
+  pointer-events: none;
+}
+
+.loading__dots {
+  position: relative;
+  z-index: 1;
+  width: 45px;
+  height: 46px;
+  animation: loading-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

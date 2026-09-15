@@ -1,0 +1,48 @@
+:root {
+  --brand-1: #006572; /* primary teal */
+  --brand-2: #003f44; /* dark teal overlay */
+  --brand-3: #a1e298; /* green accent */
+  --brand-secondary-1: #c6feff; /* light cyan text on dark */
+  --brand-secondary-2: #e9f4f6; /* light background */
+  --white: #ffffff;
+  --gray: #696969;
+  --card-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.15);
+
+  font-family: 'Sen', system-ui, sans-serif;
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b2b2f;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+.app-shell {
+  width: 100%;
+  max-width: 460px;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
+  background: var(--brand-secondary-2);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+}
+
+button {
+  font-family: inherit;
+}
+
+p {
+  margin: 0;
+}
