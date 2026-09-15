@@ -20,6 +20,7 @@ import videoAberturas from '../assets/videos/seguridad/apertura-aberturas.mp4'
 import videoAforo from '../assets/videos/seguridad/aforo.mp4'
 
 import VideoModal from './VideoModal.jsx'
+import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const SECURITY_CARDS = [
   { key: 'caida', label: 'Simular caída', icon: iconCaida, poster: posterCaida, src: videoCaida },
@@ -32,6 +33,11 @@ export default function Seguridad() {
   const navigate = useNavigate()
   const [activeKey, setActiveKey] = useState(null)
   const activeCard = SECURITY_CARDS.find((card) => card.key === activeKey)
+
+  function openVideo(key) {
+    setActiveKey(key)
+    notifyVideoOpened(key)
+  }
 
   return (
     <div className="seguridad">
@@ -46,7 +52,7 @@ export default function Seguridad() {
               key={card.key}
               type="button"
               className="seguridad__card"
-              onClick={() => setActiveKey(card.key)}
+              onClick={() => openVideo(card.key)}
             >
               <img src={card.icon} alt="" aria-hidden="true" />
               <span>{card.label}</span>
