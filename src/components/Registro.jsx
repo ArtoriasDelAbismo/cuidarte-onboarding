@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Registro.css'
+import { storeEmergencyPhones, storeNombre } from '../utils/notifyVideoOpened'
 
 import blobHeader from '../assets/login/blob-loading.svg'
 
@@ -25,6 +26,8 @@ export default function Registro() {
 
   function handleSubmit(event) {
     event.preventDefault()
+    storeEmergencyPhones(form.telefonoEmergencia1, form.telefonoEmergencia2)
+    storeNombre(form.nombre)
     // TODO: send `form` to cuidarte-ia-backend once the patient registration endpoint exists
     navigate('/cargando')
   }
