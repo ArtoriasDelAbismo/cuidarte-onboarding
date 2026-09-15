@@ -73,12 +73,17 @@ export default function Registro() {
             </option>
           ))}
         </select>
+        <p className="registro__hint">
+          Los teléfonos deben incluir código de país, ej: +5493425145645
+        </p>
         <input
           className="registro__field"
           type="tel"
           placeholder="Teléfono"
           value={form.telefono}
           onChange={handleChange('telefono')}
+          pattern="\+?[0-9]{8,15}"
+          title="Incluí el código de país, ej: +5493425145645"
           required
         />
         <input
@@ -87,6 +92,8 @@ export default function Registro() {
           placeholder="Teléfono de emergencia 1"
           value={form.telefonoEmergencia1}
           onChange={handleChange('telefonoEmergencia1')}
+          pattern="\+?[0-9]{8,15}"
+          title="Incluí el código de país, ej: +5493425145645"
           required
         />
         <input
@@ -95,6 +102,8 @@ export default function Registro() {
           placeholder="Teléfono de emergencia 2"
           value={form.telefonoEmergencia2}
           onChange={handleChange('telefonoEmergencia2')}
+          pattern="\+?[0-9]{8,15}"
+          title="Incluí el código de país, ej: +5493425145645"
         />
 
         <button type="submit" className="registro__submit">
