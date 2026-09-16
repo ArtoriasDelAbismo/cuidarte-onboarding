@@ -30,7 +30,6 @@ createRoot(document.getElementById('root')).render(
           <Route path="/bienestar/encuentros" element={<Encuentros />} />
           <Route path="/bienestar/encuentros/planificar" element={<EncuentrosPlan />} />
           <Route path="/bienestar/encuentros/listo" element={<EncuentrosListo />} />
-          <Route path="/bienestar/memotest" element={<Placeholder title="Memotest" back="/bienestar" />} />
           <Route path="/bienestar/tateti" element={<Placeholder title="Tateti" back="/bienestar" />} />
           <Route path="/bienestar/puzle" element={<Placeholder title="Puzle" back="/bienestar" />} />
           <Route path="/finanzas" element={<Placeholder title="Finanzas" />} />

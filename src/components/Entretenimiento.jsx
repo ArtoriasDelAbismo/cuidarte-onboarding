@@ -11,22 +11,23 @@ import iconTateti from '../assets/entretenimiento/icon-tateti.svg'
 import iconPuzle from '../assets/entretenimiento/icon-puzle.svg'
 import AssistantOrb from './AssistantOrb.jsx'
 import TriviaModal from './TriviaModal.jsx'
+import MemotestModal from './MemotestModal.jsx'
 
 const ENTERTAINMENT_CARDS = [
   { key: 'encuentros', label: 'Encuentros', icon: iconEncuentros, to: '/bienestar/encuentros' },
-  { key: 'trivia', label: 'Trivia', icon: iconTrivia, modal: true },
-  { key: 'memotest', label: 'Memotest', icon: iconMemotest, to: '/bienestar/memotest' },
+  { key: 'trivia', label: 'Trivia', icon: iconTrivia, modal: 'trivia' },
+  { key: 'memotest', label: 'Memotest', icon: iconMemotest, modal: 'memotest' },
   { key: 'tateti', label: 'Tateti', icon: iconTateti, to: '/bienestar/tateti' },
   { key: 'puzle', label: 'Puzle', icon: iconPuzle, to: '/bienestar/puzle' },
 ]
 
 export default function Entretenimiento() {
   const navigate = useNavigate()
-  const [showTrivia, setShowTrivia] = useState(false)
+  const [activeModal, setActiveModal] = useState(null)
 
   function handleCardClick(card) {
     if (card.modal) {
-      setShowTrivia(true)
+      setActiveModal(card.modal)
     } else {
       navigate(card.to)
     }
@@ -60,7 +61,8 @@ export default function Entretenimiento() {
         </button>
       </div>
 
-      {showTrivia && <TriviaModal onClose={() => setShowTrivia(false)} />}
+      {activeModal === 'trivia' && <TriviaModal onClose={() => setActiveModal(null)} />}
+      {activeModal === 'memotest' && <MemotestModal onClose={() => setActiveModal(null)} />}
     </div>
   )
 }
