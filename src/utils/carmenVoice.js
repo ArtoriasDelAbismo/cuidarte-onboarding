@@ -30,7 +30,14 @@ export const CARMEN_STATE = {
 
 // TODO: replace with the real patient id once patient registration exists on
 // the backend (Registro.jsx currently never creates a server-side record).
+// Until then, set VITE_CARMEN_USER_ID to a real user_id the backend dev gives
+// you (e.g. in .env.local, or as a Netlify env var) — otherwise this falls
+// back to a random UUID that the backend almost certainly won't recognize.
 export function getOrCreateUserId() {
+  if (import.meta.env.VITE_CARMEN_USER_ID) {
+    return import.meta.env.VITE_CARMEN_USER_ID
+  }
+
   let id = localStorage.getItem(USER_ID_STORAGE_KEY)
   if (!id) {
     id = crypto.randomUUID()
