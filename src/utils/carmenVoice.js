@@ -220,6 +220,28 @@ export class CarmenVoiceClient {
       channelInterpretation: 'discrete',
     })
 
+    // Some mobile browsers aggressively suspend an AudioContext that never
+    // produces audible output — since we deliberately never connect the mic
+    // to destination (would echo the user's own voice back), that can look
+    // "idle" to the browser's power management and silently kill capture
+    // after a few seconds. A dedicated oscillator at near-zero (not exactly
+    // zero, or some engines optimize it away) gain keeps the graph "active"
+    // without ever being audible or risking mic feedback.
+    this.keepAliveOsc = this.audioContext.createOscillator()
+    const keepAliveGain = this.audioContext.createGain()
+    keepAliveGain.gain.value = 0.000001
+    this.keepAliveOsc.connect(keepAliveGain)
+    keepAliveGain.connect(this.audioContext.destination)
+    this.keepAliveOsc.start()
+
+    this.audioContext.onstatechange = () => {
+      console.log('[carmen] audioContext state ->', this.audioContext.state)
+      if (this.audioContext.state === 'suspended' && this.isReady) {
+        console.warn('[carmen] audioContext unexpectedly suspended — attempting resume')
+        this.audioContext.resume().catch((err) => console.error('[carmen] resume failed', err))
+      }
+    }
+
     let loggedFirstChunk = false
     let lastLevelLogAt = 0
     this.workletNode.port.onmessage = (event) => {
@@ -330,10 +352,17 @@ export class CarmenVoiceClient {
   teardownAudio() {
     clearTimeout(this.helloTimeout)
     this.isReady = false
+    try {
+      this.keepAliveOsc?.stop()
+    } catch {
+      // already stopped/never started — fine
+    }
+    this.keepAliveOsc?.disconnect()
     this.workletNode?.disconnect()
     this.sourceNode?.disconnect()
     this.micStream?.getTracks().forEach((track) => track.stop())
     this.audioContext?.close()
+    this.keepAliveOsc = null
     this.workletNode = null
     this.sourceNode = null
     this.micStream = null
