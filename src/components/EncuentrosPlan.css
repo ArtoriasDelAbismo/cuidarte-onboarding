@@ -5,7 +5,6 @@
   background: var(--brand-1);
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .encuentros-plan__blob {
@@ -24,7 +23,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 62%;
+  top: 55%;
   bottom: 0;
   background: linear-gradient(180deg, rgba(161, 226, 152, 0) 0%, rgba(161, 226, 152, 0.75) 100%);
   pointer-events: none;
@@ -34,15 +33,17 @@
 .encuentros-plan__content {
   position: relative;
   z-index: 1;
-  margin-top: auto;
-  margin-bottom: auto;
-  padding: 24px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   width: 100%;
   max-width: 320px;
+  margin: 0 auto;
+  padding: 24px;
+  padding-bottom: 96px;
 }
 
 .encuentros-plan__label {
@@ -53,10 +54,10 @@
   color: var(--brand-3);
 }
 
+/* Not absolutely positioned: an open list grows this box in normal flow so it
+   pushes the next field down instead of overlapping it. */
 .encuentros-plan__dropdown {
-  position: relative;
   width: 100%;
-  z-index: 2;
 }
 
 .encuentros-plan__dropdown-header {
@@ -90,10 +91,6 @@
 }
 
 .encuentros-plan__dropdown-list {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -136,9 +133,11 @@
 }
 
 .encuentros-plan__back {
-  position: relative;
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
   z-index: 1;
-  margin-bottom: 24px;
   background: rgba(255, 255, 255, 0.62);
   color: var(--brand-1);
   border: none;

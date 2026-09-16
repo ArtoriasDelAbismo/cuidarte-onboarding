@@ -1,0 +1,74 @@
+.encuentros-listo {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--brand-1);
+}
+
+.encuentros-listo__blob {
+  position: absolute;
+  top: -45%;
+  left: -60%;
+  width: 160%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--brand-1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentros-listo__glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 55%;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(161, 226, 152, 0) 0%, rgba(161, 226, 152, 0.75) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentros-listo__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 100%;
+  max-width: 320px;
+  padding: 0 24px;
+}
+
+.encuentros-listo__title {
+  margin: 0 0 12px;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 900;
+  font-size: 1.9rem;
+  color: var(--brand-3);
+}
+
+.encuentros-listo__body {
+  margin: 0;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 900;
+  font-size: 1.9rem;
+  line-height: 1.25;
+  color: var(--brand-secondary-1);
+}
+
+.encuentros-listo__back {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--brand-1);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}

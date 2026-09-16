@@ -3,9 +3,6 @@
   min-height: 100dvh;
   overflow: hidden;
   background: var(--brand-1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .encuentro__blob {
@@ -29,13 +26,19 @@
   z-index: 0;
 }
 
+/* Full-bleed background carousel — the headline/CTA sit centered on top of it,
+   not stacked below it, so this needs to fill the whole screen, not a band.
+   Cards keep the photos' own ~3:2 landscape ratio and scroll vertically, so
+   `cover` barely has to crop — a horizontal row of tall narrow strips would
+   force a ~3:1 crop and cut the subjects out of the shot. */
 .encuentro__carousel {
   position: absolute;
-  top: 8%;
+  top: 0px;
+  bottom: 0;
   left: 0;
   right: 0;
-  height: 46%;
   display: flex;
+  flex-direction: column;
   gap: 12px;
   overflow: hidden;
   opacity: 0.18;
@@ -45,8 +48,8 @@
 
 .encuentro__carousel-frame {
   flex: none;
-  width: 70%;
-  height: 100%;
+  width: 100%;
+  aspect-ratio: 3 / 2;
   border-radius: 15px;
   background-color: var(--white);
   background-size: cover;
@@ -55,10 +58,10 @@
 
 @keyframes encuentro-scroll {
   from {
-    transform: translateX(0);
+    transform: translateY(0);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateY(-50%);
   }
 }
 
@@ -66,19 +69,21 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 62%;
+  top: 55%;
   bottom: 0;
   background: linear-gradient(180deg, rgba(161, 226, 152, 0) 0%, rgba(161, 226, 152, 0.75) 100%);
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 .encuentro__content {
-  position: relative;
-  z-index: 1;
-  margin-top: auto;
-  margin-bottom: auto;
-  padding: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 100%;
+  padding: 0 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,9 +122,11 @@
 }
 
 .encuentro__back {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 24px;
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 2;
   background: rgba(255, 255, 255, 0.62);
   color: var(--brand-1);
   border: none;

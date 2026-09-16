@@ -71,7 +71,11 @@ export default function EncuentrosPlan() {
         <p className="encuentros-plan__label">con</p>
         <Dropdown options={CON_QUIEN_OPTIONS} value={conQuien} onSelect={setConQuien} />
 
-        <button type="button" className="encuentros-plan__confirm" onClick={() => navigate('/bienestar')}>
+        <button
+          type="button"
+          className="encuentros-plan__confirm"
+          onClick={() => navigate('/bienestar/encuentros/listo')}
+        >
           Confirmar
         </button>
       </div>
