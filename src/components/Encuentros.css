@@ -1,0 +1,133 @@
+.encuentro {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--brand-1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.encuentro__blob {
+  position: absolute;
+  top: -45%;
+  left: -60%;
+  width: 160%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--brand-1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentro__shape {
+  position: absolute;
+  top: 18%;
+  left: -30%;
+  width: 160%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentro__carousel {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  right: 0;
+  height: 46%;
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+  opacity: 0.18;
+  z-index: 0;
+  animation: encuentro-scroll 32s linear infinite;
+}
+
+.encuentro__carousel-frame {
+  flex: none;
+  width: 70%;
+  height: 100%;
+  border-radius: 15px;
+  background-color: var(--white);
+  background-size: cover;
+  background-position: center;
+}
+
+@keyframes encuentro-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.encuentro__glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62%;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(161, 226, 152, 0) 0%, rgba(161, 226, 152, 0.75) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentro__content {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+.encuentro__headline {
+  margin: 0;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  line-height: 1.35;
+}
+
+.encuentro__headline-accent {
+  color: var(--brand-3);
+}
+
+.encuentro__headline-underline {
+  color: var(--brand-secondary-1);
+  text-decoration: underline;
+}
+
+.encuentro__cta {
+  background: var(--brand-secondary-2);
+  color: var(--brand-1);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}
+
+.encuentro__back {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--brand-1);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}
