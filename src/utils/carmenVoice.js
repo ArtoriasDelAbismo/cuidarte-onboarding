@@ -197,6 +197,9 @@ export class CarmenVoiceClient {
 
   async setupAudioCapture() {
     this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    const [track] = this.micStream.getAudioTracks()
+    console.log('[carmen] mic track:', track?.label, track?.getSettings?.())
+
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
 
     await this.audioContext.audioWorklet.addModule(
@@ -207,6 +210,7 @@ export class CarmenVoiceClient {
     this.workletNode = new AudioWorkletNode(this.audioContext, 'pcm-capture-processor')
 
     let loggedFirstChunk = false
+    let lastLevelLogAt = 0
     this.workletNode.port.onmessage = (event) => {
       // Drop frames captured before bridge.ready — nothing to send them to yet.
       if (!this.isReady) return
@@ -216,6 +220,17 @@ export class CarmenVoiceClient {
       if (!loggedFirstChunk) {
         loggedFirstChunk = true
         console.log('[carmen] streaming input_audio_buffer.append (further chunks not logged individually)')
+      }
+      // Throttled live level meter — proves whether real signal (not
+      // silence) is actually being captured, independent of anything the
+      // server does with it.
+      const now = performance.now()
+      if (now - lastLevelLogAt > 1000) {
+        lastLevelLogAt = now
+        let sumSquares = 0
+        for (let i = 0; i < event.data.length; i++) sumSquares += event.data[i] * event.data[i]
+        const rms = Math.sqrt(sumSquares / event.data.length)
+        console.log('[carmen] mic level (rms, 0=silence):', rms.toFixed(4))
       }
     }
 
