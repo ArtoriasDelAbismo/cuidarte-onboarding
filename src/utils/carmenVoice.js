@@ -1,17 +1,19 @@
-// Client for Carmen's voice WebSocket bridge. Protocol as specified by the
-// backend dev (2026-09-16):
+// Client for Carmen's voice WebSocket bridge — a custom wrapper around
+// OpenAI's Realtime API. Protocol per the backend dev (2026-09-16):
 //   client.hello -> bridge.ready -> input_audio_buffer.append (streaming)
 //   client.playback_done -> bridge.playback_ack
 //   client.sleep -> bridge.sleep_ack (socket stays open)
 //   client.disconnect closes the socket
-//
-// NOT YET SPECIFIED by the backend, so not implemented here:
-//   - the message type/shape carrying Carmen's spoken-response audio back
-//     to the client (so `speaking` is never entered — only idle/listening)
-//   - whether the server auto-detects end-of-turn (VAD) or the client must
-//     signal it explicitly (we just stream continuously and wait)
-// Unknown server message types are logged and forwarded via onServerMessage
-// so the caller can inspect real traffic once the above lands.
+// Turn detection is fully server-side (OpenAI Realtime VAD) — the client
+// never sends input_audio_buffer.commit or response.create, just streams
+// continuously. The server confirmed it forwards OpenAI's own event names
+// on the input side unchanged (input_audio_buffer.append/speech_started/
+// speech_stopped rather than inventing bridge.* equivalents), so the
+// response-audio handling below assumes OpenAI's standard Realtime event
+// names too (response.created / response.audio.delta / response.audio.done)
+// — UNCONFIRMED for the output side specifically. Any message that doesn't
+// match is still logged via console.warn so this can be corrected quickly
+// against real traffic if the naming differs.
 
 const SOCKET_URL = import.meta.env.VITE_CARMEN_WS_URL || 'wss://openia.dev.cuidarte.tlabcloud.tech/voice/ws'
 const DEFAULT_SAMPLE_RATE = 24000
@@ -52,6 +54,12 @@ export class CarmenVoiceClient {
     this.micStream = null
     this.sampleRate = DEFAULT_SAMPLE_RATE
     this.state = CARMEN_STATE.IDLE
+
+    // Playback scheduling state for Carmen's response audio.
+    this.nextPlaybackTime = 0
+    this.pendingPlaybackSources = 0
+    this.responseAudioDone = false
+    this.currentResponseId = null
   }
 
   setState(next) {
@@ -115,6 +123,23 @@ export class CarmenVoiceClient {
       case 'bridge.playback_ack':
         this.setState(CARMEN_STATE.LISTENING)
         break
+      case 'input_audio_buffer.speech_started':
+      case 'input_audio_buffer.speech_stopped':
+        // Informational VAD events — no client action needed, server drives
+        // the turn automatically. Kept as explicit no-ops so they don't spam
+        // the "unhandled" warning below.
+        break
+      case 'response.created':
+        this.currentResponseId = msg.response?.id || msg.response_id || null
+        this.responseAudioDone = false
+        break
+      case 'response.audio.delta':
+        this.handleAudioDelta(msg)
+        break
+      case 'response.audio.done':
+      case 'response.done':
+        this.finalizeResponseAudio()
+        break
       default:
         console.warn('[carmen] unhandled message type', msg.type, msg)
         break
@@ -145,6 +170,56 @@ export class CarmenVoiceClient {
     this.sourceNode.connect(this.workletNode)
   }
 
+  // Schedules a base64 PCM16 chunk for gapless playback: AudioBuffer can hold
+  // a different sampleRate than the AudioContext's own — the browser
+  // resamples automatically on playback, so no manual resampling needed here
+  // (unlike the mic-capture side, which isn't going through AudioBuffer).
+  handleAudioDelta(msg) {
+    const base64 = msg.delta || msg.audio
+    if (!base64 || !this.audioContext) return
+
+    this.setState(CARMEN_STATE.SPEAKING)
+
+    const pcm16 = new Int16Array(base64ToArrayBuffer(base64))
+    const float32 = new Float32Array(pcm16.length)
+    for (let i = 0; i < pcm16.length; i++) float32[i] = pcm16[i] / 0x8000
+
+    const audioBuffer = this.audioContext.createBuffer(1, float32.length, this.sampleRate)
+    audioBuffer.copyToChannel(float32, 0)
+
+    const source = this.audioContext.createBufferSource()
+    source.buffer = audioBuffer
+    source.connect(this.audioContext.destination)
+
+    const startAt = Math.max(this.audioContext.currentTime, this.nextPlaybackTime)
+    source.start(startAt)
+    this.nextPlaybackTime = startAt + audioBuffer.duration
+
+    this.pendingPlaybackSources++
+    source.onended = () => {
+      this.pendingPlaybackSources--
+      if (this.pendingPlaybackSources === 0 && this.responseAudioDone) {
+        this.finishPlayback()
+      }
+    }
+  }
+
+  finalizeResponseAudio() {
+    this.responseAudioDone = true
+    if (this.pendingPlaybackSources === 0) {
+      this.finishPlayback()
+    }
+  }
+
+  finishPlayback() {
+    const responseId = this.currentResponseId
+    this.currentResponseId = null
+    this.responseAudioDone = false
+    this.nextPlaybackTime = 0
+    this.setState(CARMEN_STATE.LISTENING)
+    if (responseId) this.playbackDone(responseId)
+  }
+
   playbackDone(responseId) {
     this.send({ type: 'client.playback_done', responseid: responseId })
   }
@@ -171,6 +246,11 @@ export class CarmenVoiceClient {
     this.sourceNode = null
     this.micStream = null
     this.audioContext = null
+
+    this.nextPlaybackTime = 0
+    this.pendingPlaybackSources = 0
+    this.responseAudioDone = false
+    this.currentResponseId = null
   }
 
   send(payload) {
@@ -202,6 +282,13 @@ function floatTo16BitPCM(float32) {
     out[i] = sample < 0 ? sample * 0x8000 : sample * 0x7fff
   }
   return out
+}
+
+function base64ToArrayBuffer(base64) {
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return bytes.buffer
 }
 
 function arrayBufferToBase64(buffer) {
