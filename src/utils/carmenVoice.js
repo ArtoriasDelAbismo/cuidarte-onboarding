@@ -214,6 +214,18 @@ export class CarmenVoiceClient {
     )
 
     this.sourceNode = this.audioContext.createMediaStreamSource(this.micStream)
+
+    // Diagnostic only, opt-in via ?debugMic=1 in the URL: routes the raw mic
+    // signal straight to the speakers so you can literally hear your own
+    // voice, completely bypassing the worklet/encoding pipeline below. If
+    // you can't hear yourself with this on, it's a browser/OS/device issue,
+    // not something in this code. (Expect a slight echo/latency — that's
+    // normal for a live monitor, not a bug.)
+    if (new URLSearchParams(window.location.search).get('debugMic') === '1') {
+      console.warn('[carmen] debugMic=1 — routing raw mic audio to speakers for testing')
+      this.sourceNode.connect(this.audioContext.destination)
+    }
+
     this.workletNode = new AudioWorkletNode(this.audioContext, 'pcm-capture-processor', {
       channelCount: 1,
       channelCountMode: 'explicit',
