@@ -8,6 +8,7 @@ import iconTrivia from '../assets/entretenimiento/icon-trivia.svg'
 import iconMemotest from '../assets/entretenimiento/icon-memotest.svg'
 import iconTateti from '../assets/entretenimiento/icon-tateti.svg'
 import iconPuzle from '../assets/entretenimiento/icon-puzle.svg'
+import AssistantOrb from './AssistantOrb.jsx'
 
 const ENTERTAINMENT_CARDS = [
   { key: 'encuentros', label: 'Encuentros', icon: iconEncuentros, to: '/bienestar/encuentros' },
@@ -25,6 +26,8 @@ export default function Entretenimiento() {
       <img className="entretenimiento__blob" src={blob} alt="" aria-hidden="true" />
       <div className="entretenimiento__glow" aria-hidden="true" />
       <img className="entretenimiento__logo" src={logo} alt="Cuidarte.ia" />
+
+      <AssistantOrb />
 
       <div className="entretenimiento__content">
         <div className="entretenimiento__list">

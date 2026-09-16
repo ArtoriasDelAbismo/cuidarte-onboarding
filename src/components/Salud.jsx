@@ -24,6 +24,7 @@ import videoTemperatura from '../assets/videos/salud/temperatura.mp4'
 import videoEcg from '../assets/videos/salud/ecg.mp4'
 
 import VideoModal from './VideoModal.jsx'
+import AssistantOrb from './AssistantOrb.jsx'
 import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const WIDE_CARD = {
@@ -57,6 +58,8 @@ export default function Salud() {
       <img className="salud__blob" src={blob} alt="" aria-hidden="true" />
       <div className="salud__glow" aria-hidden="true" />
       <img className="salud__logo" src={logo} alt="Cuidarte.ia" />
+
+      <AssistantOrb />
 
       <div className="salud__content">
         <button

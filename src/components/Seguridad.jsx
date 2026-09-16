@@ -20,6 +20,7 @@ import videoAberturas from '../assets/videos/seguridad/apertura-aberturas.mp4'
 import videoAforo from '../assets/videos/seguridad/aforo.mp4'
 
 import VideoModal from './VideoModal.jsx'
+import AssistantOrb from './AssistantOrb.jsx'
 import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const SECURITY_CARDS = [
@@ -44,6 +45,8 @@ export default function Seguridad() {
       <img className="seguridad__blob" src={blob} alt="" aria-hidden="true" />
       <div className="seguridad__glow" aria-hidden="true" />
       <img className="seguridad__logo" src={logo} alt="Cuidarte.ia" />
+
+      <AssistantOrb />
 
       <div className="seguridad__content">
         <div className="seguridad__list">
