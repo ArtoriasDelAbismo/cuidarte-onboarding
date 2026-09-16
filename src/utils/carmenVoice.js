@@ -1,19 +1,19 @@
 // Client for Carmen's voice WebSocket bridge — a custom wrapper around
-// OpenAI's Realtime API. Protocol per the backend dev (2026-09-16):
+// OpenAI's Realtime API. Protocol per the backend dev (2026-09-16) and
+// confirmed end-to-end against live traffic the same day:
 //   client.hello -> bridge.ready -> input_audio_buffer.append (streaming)
 //   client.playback_done -> bridge.playback_ack
 //   client.sleep -> bridge.sleep_ack (socket stays open)
 //   client.disconnect closes the socket
 // Turn detection is fully server-side (OpenAI Realtime VAD) — the client
 // never sends input_audio_buffer.commit or response.create, just streams
-// continuously. The server confirmed it forwards OpenAI's own event names
-// on the input side unchanged (input_audio_buffer.append/speech_started/
-// speech_stopped rather than inventing bridge.* equivalents), so the
-// response-audio handling below assumes OpenAI's standard Realtime event
-// names too (response.created / response.audio.delta / response.audio.done)
-// — UNCONFIRMED for the output side specifically. Any message that doesn't
-// match is still logged via console.warn so this can be corrected quickly
-// against real traffic if the naming differs.
+// continuously. The bridge forwards OpenAI's own Realtime event names
+// unchanged on both directions (not bridge.* equivalents):
+//   input_audio_buffer.speech_started / speech_stopped
+//   response.output_audio.delta / response.output_audio.done / response.done
+// response.created never actually fires — response_id only ever appears as
+// a field on the delta/done messages themselves. Any message that still
+// doesn't match is logged via console.warn.
 
 const SOCKET_URL = import.meta.env.VITE_CARMEN_WS_URL || 'wss://openia.dev.cuidarte.tlabcloud.tech/voice/ws'
 const DEFAULT_SAMPLE_RATE = 24000
@@ -167,18 +167,25 @@ export class CarmenVoiceClient {
       case 'input_audio_buffer.speech_stopped':
         console.log('[carmen] speech_stopped')
         break
-      case 'response.created':
-        this.currentResponseId = msg.response?.id || msg.response_id || null
-        this.responseAudioDone = false
-        console.log('[carmen] response.created — id =', this.currentResponseId)
-        break
-      case 'response.audio.delta':
+      // Confirmed from live traffic (2026-09-16): response.created never
+      // fires — response_id only ever appears as a field on the delta/done
+      // messages themselves, captured lazily in handleAudioDelta below.
+      case 'response.output_audio.delta':
         this.handleAudioDelta(msg)
         break
-      case 'response.audio.done':
+      case 'response.output_audio.done':
+        console.log('[carmen] response.output_audio.done')
+        break
       case 'response.done':
-        console.log('[carmen]', msg.type)
+        console.log('[carmen] response.done')
         this.finalizeResponseAudio()
+        break
+      // Transcripts — not surfaced in the UI yet, just silenced so they
+      // don't spam the "unhandled" warning below.
+      case 'conversation.item.input_audio_transcription.delta':
+      case 'conversation.item.input_audio_transcription.completed':
+      case 'response.output_audio_transcript.delta':
+      case 'response.output_audio_transcript.done':
         break
       default:
         console.warn('[carmen] unhandled message type', msg.type, msg)
@@ -225,6 +232,11 @@ export class CarmenVoiceClient {
     const base64 = msg.delta || msg.audio
     if (!base64 || !this.audioContext) return
 
+    // response.created never fires (confirmed from live traffic) — capture
+    // the id off the delta itself instead.
+    if (msg.response_id) this.currentResponseId = msg.response_id
+    this.responseAudioDone = false
+
     this.setState(CARMEN_STATE.SPEAKING)
 
     const pcm16 = new Int16Array(base64ToArrayBuffer(base64))
@@ -264,7 +276,12 @@ export class CarmenVoiceClient {
     this.responseAudioDone = false
     this.nextPlaybackTime = 0
     this.setState(CARMEN_STATE.LISTENING)
-    if (responseId) this.playbackDone(responseId)
+    if (responseId) {
+      console.log('[carmen] playback finished, sending client.playback_done for', responseId)
+      this.playbackDone(responseId)
+    } else {
+      console.warn('[carmen] playback finished but no response_id was ever captured — client.playback_done not sent')
+    }
   }
 
   playbackDone(responseId) {
