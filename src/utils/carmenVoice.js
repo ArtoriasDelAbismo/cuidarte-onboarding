@@ -196,7 +196,14 @@ export class CarmenVoiceClient {
   }
 
   async setupAudioCapture() {
-    this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    // Explicit mono constraint: multi-element "array" mics (common on Windows
+    // laptops, e.g. "Microphone Array (Realtek)") expose raw beamforming
+    // channels that can read as near-silent individually — letting the
+    // browser downmix to one channel itself (rather than us reading raw
+    // channel 0 in the worklet) avoids landing on a dead/cancelled channel.
+    this.micStream = await navigator.mediaDevices.getUserMedia({
+      audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true },
+    })
     const [track] = this.micStream.getAudioTracks()
     console.log('[carmen] mic track:', track?.label, track?.getSettings?.())
 
@@ -207,7 +214,11 @@ export class CarmenVoiceClient {
     )
 
     this.sourceNode = this.audioContext.createMediaStreamSource(this.micStream)
-    this.workletNode = new AudioWorkletNode(this.audioContext, 'pcm-capture-processor')
+    this.workletNode = new AudioWorkletNode(this.audioContext, 'pcm-capture-processor', {
+      channelCount: 1,
+      channelCountMode: 'explicit',
+      channelInterpretation: 'discrete',
+    })
 
     let loggedFirstChunk = false
     let lastLevelLogAt = 0
