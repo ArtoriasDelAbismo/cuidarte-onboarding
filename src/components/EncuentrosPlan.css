@@ -1,0 +1,152 @@
+.encuentros-plan {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--brand-1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.encuentros-plan__blob {
+  position: absolute;
+  top: -45%;
+  left: -60%;
+  width: 160%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: var(--brand-1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentros-plan__glow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 62%;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(161, 226, 152, 0) 0%, rgba(161, 226, 152, 0.75) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.encuentros-plan__content {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.encuentros-plan__label {
+  margin: 0;
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--brand-3);
+}
+
+.encuentros-plan__dropdown {
+  position: relative;
+  width: 100%;
+  z-index: 2;
+}
+
+.encuentros-plan__dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 18px;
+  border: 1.3px solid var(--brand-secondary-1);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--brand-secondary-1);
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.encuentros-plan__dropdown--open .encuentros-plan__dropdown-header {
+  border-color: transparent;
+  border-radius: 24px 24px 0 0;
+  background: var(--white);
+  color: var(--brand-1);
+}
+
+.encuentros-plan__dropdown-header img {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.encuentros-plan__dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--white);
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.encuentros-plan__dropdown-list button {
+  display: block;
+  width: 100%;
+  padding: 11px 24px;
+  border: none;
+  background: transparent;
+  color: var(--brand-1);
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.encuentros-plan__dropdown-list button:hover {
+  background: var(--brand-secondary-2);
+}
+
+.encuentros-plan__confirm {
+  margin-top: 8px;
+  background: var(--brand-secondary-2);
+  color: var(--brand-1);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}
+
+.encuentros-plan__back {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--brand-1);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}
