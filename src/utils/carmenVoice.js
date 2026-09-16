@@ -80,17 +80,31 @@ export class CarmenVoiceClient {
 
   async start() {
     if (this.ws) return
+
+    // iOS Safari requires getUserMedia to fire essentially synchronously
+    // within the tap gesture — any work beforehand (logging, React state
+    // updates, other awaits) risks the browser deciding the "user
+    // activation" has lapsed and silently never showing the permission
+    // prompt at all (not an error — nothing happens). So this is the very
+    // first thing start() does, before any other statement.
+    let micStream
+    try {
+      micStream = await navigator.mediaDevices.getUserMedia({
+        audio: { channelCount: { ideal: 1 }, echoCancellation: true, noiseSuppression: true },
+      })
+    } catch (err) {
+      console.error('[carmen] getUserMedia failed/denied', err)
+      this.onError(err)
+      this.setState(CARMEN_STATE.ERROR)
+      return
+    }
+
     console.log('[carmen] start() — user_id =', this.userId)
     this.setState(CARMEN_STATE.CONNECTING)
     this.isReady = false
 
-    // Request mic permission immediately on the user gesture, in parallel
-    // with the WebSocket handshake, instead of waiting for bridge.ready —
-    // that way a stalled/rejected handshake doesn't also hide whether mic
-    // access itself is the problem. Captured frames are dropped (see the
-    // worklet onmessage below) until isReady flips true.
     try {
-      await this.setupAudioCapture()
+      await this.setupAudioCapture(micStream)
       console.log('[carmen] mic access granted, capture pipeline ready')
     } catch (err) {
       console.error('[carmen] mic/audio setup failed', err)
@@ -195,15 +209,8 @@ export class CarmenVoiceClient {
     this.onServerMessage(msg)
   }
 
-  async setupAudioCapture() {
-    // Explicit mono constraint: multi-element "array" mics (common on Windows
-    // laptops, e.g. "Microphone Array (Realtek)") expose raw beamforming
-    // channels that can read as near-silent individually — letting the
-    // browser downmix to one channel itself (rather than us reading raw
-    // channel 0 in the worklet) avoids landing on a dead/cancelled channel.
-    this.micStream = await navigator.mediaDevices.getUserMedia({
-      audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true },
-    })
+  async setupAudioCapture(micStream) {
+    this.micStream = micStream
     const [track] = this.micStream.getAudioTracks()
     console.log('[carmen] mic track:', track?.label, track?.getSettings?.())
 
