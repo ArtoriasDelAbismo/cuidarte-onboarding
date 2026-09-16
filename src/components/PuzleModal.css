@@ -1,0 +1,117 @@
+.puzle-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 63, 68, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 24px;
+  animation: puzle-modal-overlay-in 200ms ease both;
+}
+
+.puzle-modal-card {
+  width: min(320px, 100%);
+  padding: 18px;
+  border-radius: 15px;
+  background: rgba(0, 101, 114, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: puzle-modal-card-in 450ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.puzle-modal-status {
+  margin: 0;
+  color: var(--brand-secondary-1);
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.puzle-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.puzle-modal-tile {
+  aspect-ratio: 1 / 1;
+  border: none;
+  border-radius: 8px;
+  background: var(--brand-3);
+  box-shadow: inset 4px 4px 5px 0px rgba(0, 101, 114, 0.33);
+  color: var(--brand-1);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.puzle-modal-tile--empty {
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+}
+
+.puzle-modal-tile--solved:not(.puzle-modal-tile--empty) {
+  box-shadow:
+    inset 4px 4px 5px 0px rgba(0, 101, 114, 0.33),
+    0 0 0 2px var(--brand-secondary-2);
+  cursor: default;
+}
+
+.puzle-modal-restart {
+  background: var(--brand-3);
+  color: var(--brand-2);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}
+
+.puzle-modal-close {
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--brand-1);
+  border: none;
+  border-radius: 100px;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+}
+
+@keyframes puzle-modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes puzle-modal-card-in {
+  from {
+    transform: translateY(60vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

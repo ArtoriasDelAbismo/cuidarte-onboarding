@@ -13,13 +13,14 @@ import AssistantOrb from './AssistantOrb.jsx'
 import TriviaModal from './TriviaModal.jsx'
 import MemotestModal from './MemotestModal.jsx'
 import TatetiModal from './TatetiModal.jsx'
+import PuzleModal from './PuzleModal.jsx'
 
 const ENTERTAINMENT_CARDS = [
   { key: 'encuentros', label: 'Encuentros', icon: iconEncuentros, to: '/bienestar/encuentros' },
   { key: 'trivia', label: 'Trivia', icon: iconTrivia, modal: 'trivia' },
   { key: 'memotest', label: 'Memotest', icon: iconMemotest, modal: 'memotest' },
   { key: 'tateti', label: 'Tateti', icon: iconTateti, modal: 'tateti' },
-  { key: 'puzle', label: 'Puzle', icon: iconPuzle, to: '/bienestar/puzle' },
+  { key: 'puzle', label: 'Puzle', icon: iconPuzle, modal: 'puzle' },
 ]
 
 export default function Entretenimiento() {
@@ -65,6 +66,7 @@ export default function Entretenimiento() {
       {activeModal === 'trivia' && <TriviaModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'memotest' && <MemotestModal onClose={() => setActiveModal(null)} />}
       {activeModal === 'tateti' && <TatetiModal onClose={() => setActiveModal(null)} />}
+      {activeModal === 'puzle' && <PuzleModal onClose={() => setActiveModal(null)} />}
     </div>
   )
 }
