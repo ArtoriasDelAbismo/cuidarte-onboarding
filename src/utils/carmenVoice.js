@@ -60,6 +60,9 @@ export class CarmenVoiceClient {
     this.pendingPlaybackSources = 0
     this.responseAudioDone = false
     this.currentResponseId = null
+
+    this.isReady = false
+    this.helloTimeout = null
   }
 
   setState(next) {
@@ -67,17 +70,37 @@ export class CarmenVoiceClient {
     this.onState(next)
   }
 
-  start() {
+  async start() {
     if (this.ws) return
     this.setState(CARMEN_STATE.CONNECTING)
+    this.isReady = false
+
+    // Request mic permission immediately on the user gesture, in parallel
+    // with the WebSocket handshake, instead of waiting for bridge.ready —
+    // that way a stalled/rejected handshake doesn't also hide whether mic
+    // access itself is the problem. Captured frames are dropped (see the
+    // worklet onmessage below) until isReady flips true.
+    try {
+      await this.setupAudioCapture()
+    } catch (err) {
+      this.onError(err)
+      this.setState(CARMEN_STATE.ERROR)
+      return
+    }
 
     this.ws = new WebSocket(SOCKET_URL)
     this.ws.binaryType = 'arraybuffer'
     this.ws.addEventListener('open', () => {
       this.send({ type: 'client.hello', user_id: this.userId, token: this.token })
+      this.helloTimeout = setTimeout(() => {
+        this.onError(new Error('Carmen no respondió al saludo inicial (bridge.ready) a tiempo — revisar user_id/token'))
+        this.setState(CARMEN_STATE.ERROR)
+        this.ws?.close()
+      }, 8000)
     })
     this.ws.addEventListener('message', (event) => this.handleMessage(event))
     this.ws.addEventListener('close', () => {
+      clearTimeout(this.helloTimeout)
       this.teardownAudio()
       this.ws = null
       this.setState(CARMEN_STATE.IDLE)
@@ -88,7 +111,7 @@ export class CarmenVoiceClient {
     })
   }
 
-  async handleMessage(event) {
+  handleMessage(event) {
     if (typeof event.data !== 'string') {
       // Binary frame (ArrayBuffer) — presumably Carmen's response audio, but
       // the shape/type for that isn't specified yet, so just log + forward it.
@@ -108,14 +131,10 @@ export class CarmenVoiceClient {
 
     switch (msg.type) {
       case 'bridge.ready':
+        clearTimeout(this.helloTimeout)
         this.sampleRate = msg.audio_format?.sample_rate || DEFAULT_SAMPLE_RATE
-        try {
-          await this.beginCapture()
-          this.setState(CARMEN_STATE.LISTENING)
-        } catch (err) {
-          this.onError(err)
-          this.setState(CARMEN_STATE.ERROR)
-        }
+        this.isReady = true
+        this.setState(CARMEN_STATE.LISTENING)
         break
       case 'bridge.sleep_ack':
         this.setState(CARMEN_STATE.SLEEPING)
@@ -148,7 +167,7 @@ export class CarmenVoiceClient {
     this.onServerMessage(msg)
   }
 
-  async beginCapture() {
+  async setupAudioCapture() {
     this.micStream = await navigator.mediaDevices.getUserMedia({ audio: true })
     this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
 
@@ -160,6 +179,8 @@ export class CarmenVoiceClient {
     this.workletNode = new AudioWorkletNode(this.audioContext, 'pcm-capture-processor')
 
     this.workletNode.port.onmessage = (event) => {
+      // Drop frames captured before bridge.ready — nothing to send them to yet.
+      if (!this.isReady) return
       const resampled = resampleLinear(event.data, this.audioContext.sampleRate, this.sampleRate)
       const pcm16 = floatTo16BitPCM(resampled)
       this.send({ type: 'input_audio_buffer.append', audio: arrayBufferToBase64(pcm16.buffer) })
@@ -238,6 +259,8 @@ export class CarmenVoiceClient {
   }
 
   teardownAudio() {
+    clearTimeout(this.helloTimeout)
+    this.isReady = false
     this.workletNode?.disconnect()
     this.sourceNode?.disconnect()
     this.micStream?.getTracks().forEach((track) => track.stop())
