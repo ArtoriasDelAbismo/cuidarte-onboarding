@@ -10,6 +10,8 @@ import Home from './components/Home.jsx'
 import Salud from './components/Salud.jsx'
 import Seguridad from './components/Seguridad.jsx'
 import Entretenimiento from './components/Entretenimiento.jsx'
+import Encuentros from './components/Encuentros.jsx'
+import EncuentrosPlan from './components/EncuentrosPlan.jsx'
 import Placeholder from './components/Placeholder.jsx'
 
 createRoot(document.getElementById('root')).render(
@@ -24,7 +26,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="/salud" element={<Salud />} />
           <Route path="/seguridad" element={<Seguridad />} />
           <Route path="/bienestar" element={<Entretenimiento />} />
-          <Route path="/bienestar/encuentros" element={<Placeholder title="Encuentros" back="/bienestar" />} />
+          <Route path="/bienestar/encuentros" element={<Encuentros />} />
+          <Route path="/bienestar/encuentros/planificar" element={<EncuentrosPlan />} />
           <Route path="/bienestar/trivia" element={<Placeholder title="Trivia" back="/bienestar" />} />
           <Route path="/bienestar/memotest" element={<Placeholder title="Memotest" back="/bienestar" />} />
           <Route path="/bienestar/tateti" element={<Placeholder title="Tateti" back="/bienestar" />} />
