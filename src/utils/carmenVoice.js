@@ -64,6 +64,7 @@ export class CarmenVoiceClient {
     this.setState(CARMEN_STATE.CONNECTING)
 
     this.ws = new WebSocket(SOCKET_URL)
+    this.ws.binaryType = 'arraybuffer'
     this.ws.addEventListener('open', () => {
       this.send({ type: 'client.hello', user_id: this.userId, token: this.token })
     })
@@ -80,13 +81,20 @@ export class CarmenVoiceClient {
   }
 
   async handleMessage(event) {
+    if (typeof event.data !== 'string') {
+      // Binary frame (ArrayBuffer) — presumably Carmen's response audio, but
+      // the shape/type for that isn't specified yet, so just log + forward it.
+      console.warn('[carmen] binary frame received, byteLength =', event.data.byteLength)
+      this.onServerMessage({ type: 'binary', data: event.data })
+      return
+    }
+
     let msg
     try {
       msg = JSON.parse(event.data)
     } catch {
-      // Binary frame — presumably Carmen's response audio, but the shape/type
-      // for that isn't specified yet, so just forward it untouched.
-      this.onServerMessage({ type: 'binary', data: event.data })
+      console.warn('[carmen] non-JSON text frame received', event.data)
+      this.onServerMessage({ type: 'text', data: event.data })
       return
     }
 
