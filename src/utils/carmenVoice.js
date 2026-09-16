@@ -73,12 +73,14 @@ export class CarmenVoiceClient {
   }
 
   setState(next) {
+    console.log('[carmen] state ->', next)
     this.state = next
     this.onState(next)
   }
 
   async start() {
     if (this.ws) return
+    console.log('[carmen] start() — user_id =', this.userId)
     this.setState(CARMEN_STATE.CONNECTING)
     this.isReady = false
 
@@ -89,30 +91,37 @@ export class CarmenVoiceClient {
     // worklet onmessage below) until isReady flips true.
     try {
       await this.setupAudioCapture()
+      console.log('[carmen] mic access granted, capture pipeline ready')
     } catch (err) {
+      console.error('[carmen] mic/audio setup failed', err)
       this.onError(err)
       this.setState(CARMEN_STATE.ERROR)
       return
     }
 
+    console.log('[carmen] opening socket ->', SOCKET_URL)
     this.ws = new WebSocket(SOCKET_URL)
     this.ws.binaryType = 'arraybuffer'
     this.ws.addEventListener('open', () => {
+      console.log('[carmen] socket open — sending client.hello')
       this.send({ type: 'client.hello', user_id: this.userId, token: this.token })
       this.helloTimeout = setTimeout(() => {
+        console.error('[carmen] bridge.ready timeout after 8s — check user_id/token')
         this.onError(new Error('Carmen no respondió al saludo inicial (bridge.ready) a tiempo — revisar user_id/token'))
         this.setState(CARMEN_STATE.ERROR)
         this.ws?.close()
       }, 8000)
     })
     this.ws.addEventListener('message', (event) => this.handleMessage(event))
-    this.ws.addEventListener('close', () => {
+    this.ws.addEventListener('close', (event) => {
+      console.log('[carmen] socket closed', { code: event.code, reason: event.reason })
       clearTimeout(this.helloTimeout)
       this.teardownAudio()
       this.ws = null
       this.setState(CARMEN_STATE.IDLE)
     })
     this.ws.addEventListener('error', (event) => {
+      console.error('[carmen] socket error', event)
       this.onError(event)
       this.setState(CARMEN_STATE.ERROR)
     })
@@ -138,32 +147,37 @@ export class CarmenVoiceClient {
 
     switch (msg.type) {
       case 'bridge.ready':
+        console.log('[carmen] bridge.ready — audio_format:', msg.audio_format)
         clearTimeout(this.helloTimeout)
         this.sampleRate = msg.audio_format?.sample_rate || DEFAULT_SAMPLE_RATE
         this.isReady = true
         this.setState(CARMEN_STATE.LISTENING)
         break
       case 'bridge.sleep_ack':
+        console.log('[carmen] bridge.sleep_ack')
         this.setState(CARMEN_STATE.SLEEPING)
         break
       case 'bridge.playback_ack':
+        console.log('[carmen] bridge.playback_ack')
         this.setState(CARMEN_STATE.LISTENING)
         break
       case 'input_audio_buffer.speech_started':
+        console.log('[carmen] speech_started')
+        break
       case 'input_audio_buffer.speech_stopped':
-        // Informational VAD events — no client action needed, server drives
-        // the turn automatically. Kept as explicit no-ops so they don't spam
-        // the "unhandled" warning below.
+        console.log('[carmen] speech_stopped')
         break
       case 'response.created':
         this.currentResponseId = msg.response?.id || msg.response_id || null
         this.responseAudioDone = false
+        console.log('[carmen] response.created — id =', this.currentResponseId)
         break
       case 'response.audio.delta':
         this.handleAudioDelta(msg)
         break
       case 'response.audio.done':
       case 'response.done':
+        console.log('[carmen]', msg.type)
         this.finalizeResponseAudio()
         break
       default:
@@ -185,12 +199,17 @@ export class CarmenVoiceClient {
     this.sourceNode = this.audioContext.createMediaStreamSource(this.micStream)
     this.workletNode = new AudioWorkletNode(this.audioContext, 'pcm-capture-processor')
 
+    let loggedFirstChunk = false
     this.workletNode.port.onmessage = (event) => {
       // Drop frames captured before bridge.ready — nothing to send them to yet.
       if (!this.isReady) return
       const resampled = resampleLinear(event.data, this.audioContext.sampleRate, this.sampleRate)
       const pcm16 = floatTo16BitPCM(resampled)
       this.send({ type: 'input_audio_buffer.append', audio: arrayBufferToBase64(pcm16.buffer) })
+      if (!loggedFirstChunk) {
+        loggedFirstChunk = true
+        console.log('[carmen] streaming input_audio_buffer.append (further chunks not logged individually)')
+      }
     }
 
     // Deliberately not connected to audioContext.destination — we don't want
