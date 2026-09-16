@@ -34,9 +34,13 @@ export default function Intro() {
 
   return (
     <div className={`intro intro--${phase}`}>
+      <div className="intro__bg" style={{ backgroundImage: `url(${splashBg})` }} />
       <div
-        className="intro__bg"
-        style={{ backgroundImage: `url(${phase === 'welcome' ? splashBgAlt : splashBg})` }}
+        className="intro__bg intro__bg--alt"
+        style={{
+          backgroundImage: `url(${splashBgAlt})`,
+          opacity: phase === 'welcome' || phase === 'exiting' ? 1 : 0,
+        }}
       />
       <div className="intro__scrim" />
 
