@@ -13,7 +13,7 @@ export default function VideoModal({ poster, src, title, onClose }) {
       >
         <div className="video-modal-frame">
           {src ? (
-            <video className="video-modal-video" poster={poster} src={src} controls playsInline>
+            <video className="video-modal-video" poster={poster} src={src} controls playsInline autoPlay muted>
               Tu navegador no soporta video.
             </video>
           ) : (
