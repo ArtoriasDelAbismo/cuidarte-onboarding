@@ -1,0 +1,375 @@
+/* Figma frames are 1920x1080; sizes scale with the viewport and cap at the design values. */
+.home-desktop {
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 8px 8px 10.3px 0 rgba(0, 0, 0, 0.15);
+
+  position: relative;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--brand-2);
+}
+
+/* Mimics object-fit: cover for the photo so hotspots can be placed in its coordinates */
+.home-desktop__stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100vw, 179.17dvh);
+  aspect-ratio: 2752 / 1536;
+  transform: translate(-50%, -50%);
+}
+
+.home-desktop__bg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home-desktop__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 63, 68, 0.81);
+  pointer-events: none;
+  transition: opacity 0.9s var(--ease);
+}
+
+.home-desktop--explore .home-desktop__scrim {
+  opacity: 0;
+}
+
+/* ---------- Intro copy ---------- */
+
+.home-desktop__title,
+.home-desktop__subtitle,
+.home-desktop__explore {
+  position: absolute;
+  left: 50%;
+  margin: 0;
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.9s var(--ease);
+}
+
+.home-desktop__title {
+  top: 34.7%;
+  width: 100%;
+  padding: 0 10px;
+  transform: translateX(-50%);
+  color: var(--white);
+  font-weight: 700;
+  font-size: clamp(64px, 6.25vw, 120px);
+  line-height: normal;
+  text-align: center;
+}
+
+.home-desktop__subtitle {
+  top: 52.9%;
+  width: min(1086px, calc(100% - 80px));
+  transform: translateX(-50%);
+  color: var(--white);
+  font-weight: 600;
+  font-size: clamp(20px, 1.5625vw, 30px);
+  line-height: 1.89;
+  text-align: center;
+}
+
+.home-desktop__subtitle span {
+  color: var(--brand-3);
+}
+
+.home-desktop__explore {
+  top: 82.1%;
+  width: 347px;
+  padding: 15px 40px;
+  transform: translateX(-50%);
+  border: 0;
+  border-radius: 100px;
+  background: var(--brand-3);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.07;
+  filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.9s var(--ease),
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.home-desktop__explore:hover {
+  background: var(--brand-secondary-2);
+}
+
+.home-desktop__explore:active {
+  background: var(--brand-2);
+  color: var(--brand-secondary-2);
+}
+
+.home-desktop--dim .home-desktop__title,
+.home-desktop--dim .home-desktop__subtitle,
+.home-desktop--dim .home-desktop__explore,
+.home-desktop--greet .home-desktop__subtitle,
+.home-desktop--greet .home-desktop__explore {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Explorar: copy slides off the top, button off the bottom */
+.home-desktop--explore .home-desktop__title,
+.home-desktop--explore .home-desktop__subtitle {
+  opacity: 0;
+  transform: translate(-50%, -70dvh);
+  pointer-events: none;
+}
+
+.home-desktop--explore .home-desktop__explore {
+  opacity: 0;
+  transform: translate(-50%, 25dvh);
+  pointer-events: none;
+}
+
+/* ---------- Hotspots ---------- */
+
+.home-desktop__hotspot {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.9s var(--ease);
+}
+
+.home-desktop--explore .home-desktop__hotspot {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.home-desktop__hotspot-ring {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scale(calc(22 / 36));
+  transition: transform 0.2s var(--ease);
+}
+
+.home-desktop__hotspot--open .home-desktop__hotspot-ring {
+  transform: scale(1);
+}
+
+.home-desktop__hotspot-label {
+  position: absolute;
+  bottom: calc(100% + 19px);
+  left: 50%;
+  height: 73px;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 25px;
+  background: rgba(233, 244, 246, 0.6);
+  backdrop-filter: blur(4.5px);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.07;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s var(--ease),
+    transform 0.2s var(--ease);
+}
+
+.home-desktop__hotspot--open .home-desktop__hotspot-label {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.home-desktop__hotspot:focus-visible {
+  outline: 2px solid var(--brand-3);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+/* ---------- Carmen link ---------- */
+
+.home-desktop__carmen {
+  position: absolute;
+  top: 50%;
+  left: clamp(40px, 8.18vw, 157px);
+  transform: translateY(-50%);
+  animation: home-desktop-in-left 0.9s var(--ease) 0.2s both;
+}
+
+@keyframes home-desktop-in-left {
+  from {
+    opacity: 0;
+    transform: translate(-40px, -50%);
+  }
+}
+
+.home-desktop__carmen-link {
+  height: 102px;
+  padding: 10px 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 0;
+  border-radius: 30px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--glass-shadow);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    height 0.2s var(--ease),
+    gap 0.2s var(--ease),
+    background-color 0.2s var(--ease);
+}
+
+.home-desktop__carmen-text {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+}
+
+.home-desktop__carmen-line1 {
+  color: var(--brand-1);
+  transition: color 0.2s var(--ease);
+}
+
+.home-desktop__carmen-line2 {
+  color: var(--brand-2);
+  transition: color 0.2s var(--ease);
+}
+
+.home-desktop__carmen-link:hover,
+.home-desktop__carmen-link:focus-visible,
+.home-desktop__carmen-link--active {
+  height: 116px;
+  gap: 50px;
+  background: rgba(0, 63, 68, 0.3);
+  outline: none;
+}
+
+.home-desktop__carmen-link:hover .home-desktop__carmen-line1,
+.home-desktop__carmen-link:focus-visible .home-desktop__carmen-line1,
+.home-desktop__carmen-link--active .home-desktop__carmen-line1 {
+  color: var(--brand-secondary-1);
+}
+
+.home-desktop__carmen-link:hover .home-desktop__carmen-line2,
+.home-desktop__carmen-link:focus-visible .home-desktop__carmen-line2,
+.home-desktop__carmen-link--active .home-desktop__carmen-line2 {
+  color: var(--brand-3);
+}
+
+.home-desktop__carmen-error {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  color: var(--white);
+  font-size: 14px;
+}
+
+/* ---------- Side nav ---------- */
+
+.home-desktop__nav {
+  position: absolute;
+  top: 50%;
+  right: clamp(24px, 2.55vw, 49px);
+  width: 284px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  border-radius: 30px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--glass-shadow);
+  opacity: 0;
+  transform: translate(40px, -50%);
+  pointer-events: none;
+  transition:
+    opacity 0.9s var(--ease) 0.2s,
+    transform 0.9s var(--ease) 0.2s;
+}
+
+.home-desktop--explore .home-desktop__nav {
+  opacity: 1;
+  transform: translate(0, -50%);
+  pointer-events: auto;
+}
+
+.home-desktop__nav-logo {
+  display: block;
+  width: 192px;
+  height: 27px;
+  margin: 6px 0;
+}
+
+.home-desktop__nav-list {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.home-desktop__nav-button {
+  width: 100%;
+  height: 70px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  border: 0;
+  border-radius: 15px;
+  background: transparent;
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.07;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.home-desktop__nav-button:hover,
+.home-desktop__nav-button:focus-visible {
+  background: var(--brand-secondary-2);
+  color: var(--brand-2);
+  outline: none;
+}
+
+.home-desktop__nav-icon {
+  flex-shrink: 0;
+  width: 43px;
+  height: 40px;
+  background: currentColor;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-desktop *,
+  .home-desktop__scrim {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
