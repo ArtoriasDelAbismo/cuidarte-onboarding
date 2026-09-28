@@ -17,7 +17,7 @@ import Encuentros from './components/Encuentros.jsx'
 import EncuentrosPlan from './components/EncuentrosPlan.jsx'
 import EncuentrosListo from './components/EncuentrosListo.jsx'
 import EncuentrosDesktop, { EncuentrosPlanDesktop, EncuentrosListoDesktop } from './components/EncuentrosDesktop.jsx'
-import Placeholder from './components/Placeholder.jsx'
+import Finanzas from './components/Finanzas.jsx'
 import FinanzasDesktop from './components/FinanzasDesktop.jsx'
 import useIsDesktop from './utils/useIsDesktop.js'
 
@@ -52,7 +52,7 @@ export default function App() {
           <Route path="/salud" element={isDesktop ? <SaludDesktop /> : <Salud />} />
           <Route path="/seguridad" element={isDesktop ? <SeguridadDesktop /> : <Seguridad />} />
           <Route path="/bienestar" element={isDesktop ? <EntretenimientoDesktop /> : <Entretenimiento />} />
-          <Route path="/finanzas" element={isDesktop ? <FinanzasDesktop /> : <Placeholder title="Finanzas" />} />
+          <Route path="/finanzas" element={isDesktop ? <FinanzasDesktop /> : <Finanzas />} />
         </Route>
         <Route path="/bienestar" element={<Entretenimiento />} />
         {/* Encuentros is its own full-screen flow on desktop, outside DesktopScene */}
