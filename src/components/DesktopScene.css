@@ -54,6 +54,13 @@
   pointer-events: auto;
 }
 
+/* Hidden while Carmen is waking up or talking (same specificity, so it wins by order) */
+.desktop-scene--carmen-active .desktop-scene__hotspot {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 0.35s;
+}
+
 .desktop-scene__hotspot-ring {
   display: block;
   width: 100%;

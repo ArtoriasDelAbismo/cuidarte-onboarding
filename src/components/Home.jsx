@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import './Home.css'
 import { DEVICE_HOTSPOTS } from '../utils/deviceHotspots'
 import MobileStage from './MobileStage.jsx'
+import { useCarmenContext } from '../carmen/carmenContext'
 
 import logo from '../assets/home/logo-pill.svg'
 import hotspotRing from '../assets/desktop/hotspot.svg'
@@ -24,6 +25,9 @@ const NAV_ITEMS = [
 export default function Home() {
   const navigate = useNavigate()
   const [openHotspot, setOpenHotspot] = useState(null)
+  // The feature hotspots step aside while Carmen is waking up or talking.
+  const carmen = useCarmenContext()
+  const carmenActive = carmen?.status === 'connecting' || carmen?.status === 'connected'
 
   useEffect(() => {
     if (!openHotspot) return
@@ -35,16 +39,18 @@ export default function Home() {
   }, [openHotspot])
 
   return (
-    <div className="home">
+    <div className={`home${carmenActive ? ' home--carmen-active' : ''}`}>
       <MobileStage>
         {DEVICE_HOTSPOTS.map(({ key, label, mobile }) => {
-          const open = openHotspot === key
+          const open = !carmenActive && openHotspot === key
           return (
             <button
               key={key}
               type="button"
               className={`home__hotspot home__hotspot--${mobile.align || 'center'}${open ? ' home__hotspot--open' : ''}`}
               style={{ left: `${mobile.x}%`, top: `${mobile.y}%` }}
+              tabIndex={carmenActive ? -1 : 0}
+              aria-hidden={carmenActive || undefined}
               aria-label={label}
               aria-expanded={open}
               onClick={() => setOpenHotspot(open ? null : key)}

@@ -22,6 +22,13 @@
   transform: translate(-50%, -50%);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.35s ease;
+}
+
+/* Hidden while Carmen is waking up or talking */
+.home--carmen-active .home__hotspot {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Soft pulse so the dots read as tappable (no hover on touch screens) */

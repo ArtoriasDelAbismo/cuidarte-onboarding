@@ -81,6 +81,8 @@ export default function DesktopScene() {
   const [revealed, setRevealed] = useState(() => introSeen() || pathname !== '/home')
   const [openHotspot, setOpenHotspot] = useState(null)
   const carmen = useCarmen()
+  // The feature hotspots step aside while Carmen is waking up or talking.
+  const carmenActive = carmen.status === 'connecting' || carmen.status === 'connected'
 
   function reveal() {
     try {
@@ -92,7 +94,9 @@ export default function DesktopScene() {
   }
 
   return (
-    <div className={`desktop-scene${revealed ? ' desktop-scene--revealed' : ''}`}>
+    <div
+      className={`desktop-scene${revealed ? ' desktop-scene--revealed' : ''}${carmenActive ? ' desktop-scene--carmen-active' : ''}`}
+    >
       <div className="desktop-scene__stage">
         <img className="desktop-scene__bg" src={homeBg} alt="" aria-hidden="true" />
         <Suspense fallback={null}>
@@ -100,14 +104,15 @@ export default function DesktopScene() {
         </Suspense>
 
         {HOTSPOTS.map((spot) => {
-          const open = revealed && openHotspot === spot.key
+          const open = revealed && !carmenActive && openHotspot === spot.key
           return (
             <button
               key={spot.key}
               type="button"
               className={`desktop-scene__hotspot${open ? ' desktop-scene__hotspot--open' : ''}`}
               style={{ left: `${spot.x}%`, top: `${spot.y}%` }}
-              tabIndex={revealed ? 0 : -1}
+              tabIndex={revealed && !carmenActive ? 0 : -1}
+              aria-hidden={carmenActive || undefined}
               aria-label={spot.label}
               aria-expanded={open}
               onMouseEnter={() => setOpenHotspot(spot.key)}
