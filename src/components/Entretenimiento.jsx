@@ -2,14 +2,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Entretenimiento.css'
 
-import blob from '../assets/home/blob-home.svg'
-import logo from '../assets/home/logo-compact.svg'
+import fondo from '../assets/home/fondo-home.jpg'
+import logo from '../assets/home/logo-pill.svg'
 import iconEncuentros from '../assets/entretenimiento/icon-encuentros.svg'
 import iconTrivia from '../assets/entretenimiento/icon-trivia.svg'
 import iconMemotest from '../assets/entretenimiento/icon-memotest.svg'
 import iconTateti from '../assets/entretenimiento/icon-tateti.svg'
 import iconPuzle from '../assets/entretenimiento/icon-puzle.svg'
-import AssistantOrb from './AssistantOrb.jsx'
 import TriviaModal from './TriviaModal.jsx'
 import MemotestModal from './MemotestModal.jsx'
 import TatetiModal from './TatetiModal.jsx'
@@ -37,11 +36,8 @@ export default function Entretenimiento() {
 
   return (
     <div className="entretenimiento">
-      <img className="entretenimiento__blob" src={blob} alt="" aria-hidden="true" />
-      <div className="entretenimiento__glow" aria-hidden="true" />
+      <img className="entretenimiento__bg" src={fondo} alt="" aria-hidden="true" />
       <img className="entretenimiento__logo" src={logo} alt="Cuidarte.ia" />
-
-      <AssistantOrb />
 
       <div className="entretenimiento__content">
         <div className="entretenimiento__list">

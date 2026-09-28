@@ -1,81 +1,82 @@
+/* Figma: mobile "Entretenimiento" (1362:2850), a 412x917 frame sharing Home's
+   device photo and logo pill. The photo is pinned to the bottom center like on
+   Home; the cards start at the same point of the photo (y=475), moving up on
+   short screens so the Volver button still fits. */
 .entretenimiento {
   position: relative;
   min-height: 100dvh;
   overflow: hidden;
   background: var(--brand-secondary-2);
-  display: flex;
-  flex-direction: column;
 }
 
-.entretenimiento__blob {
-  position: absolute;
-  top: calc(min(100vw, 460px) * -0.6359);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 307%;
-  aspect-ratio: 1 / 1;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.entretenimiento__glow {
+.entretenimiento__bg {
   position: absolute;
   left: 0;
-  right: 0;
-  top: 61.9%;
   bottom: 0;
-  background: linear-gradient(180deg, rgba(161, 226, 152, 0) 0%, rgba(161, 226, 152, 0.75) 100%);
+  width: 100%;
+  height: calc(994 / 917 * 100%);
+  object-fit: cover;
+  object-position: center bottom;
   pointer-events: none;
-  z-index: 0;
 }
 
+/* The SVG includes the pill's drop shadow, hence 258x58 for a 250x50 pill */
 .entretenimiento__logo {
   position: relative;
-  z-index: 1;
-  width: min(70%, 230px);
-  margin: 40px auto 0;
   display: block;
+  width: 258px;
+  margin: 43px auto 0;
 }
 
+/* Cards (5x52 + 4x10 = 300px) + gap (46px) + Volver (44px) + bottom margin (52px) = 442px */
 .entretenimiento__content {
-  position: relative;
-  z-index: 1;
-  margin-top: auto;
-  padding: 24px;
+  position: absolute;
+  left: 50%;
+  top: min(calc(475 / 917 * 100%), calc(100% - 442px));
+  width: min(354px, 100% - 48px);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  transform: translateX(-50%);
 }
 
 .entretenimiento__list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
 .entretenimiento__card {
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 15px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 16px;
+  border: 0;
   border-radius: 15px;
-  border: 1px solid var(--brand-secondary-2);
-  background: rgba(0, 101, 114, 0.19);
-  backdrop-filter: blur(5px);
-  color: var(--brand-secondary-1);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(3.5px);
+  box-shadow: 8px 8px 10.3px 0 rgba(0, 0, 0, 0.15);
+  color: var(--brand-1);
   font-family: inherit;
-  font-weight: 800;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: normal;
   text-align: left;
   cursor: pointer;
-  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.15s ease;
 }
 
-.entretenimiento__card:hover {
-  background: rgba(0, 101, 114, 0.32);
+.entretenimiento__card:hover,
+.entretenimiento__card:active,
+.entretenimiento__card:focus-visible {
+  background: rgba(255, 255, 255, 0.85);
+  outline: none;
 }
 
 .entretenimiento__card img {
+  display: block;
   width: 32px;
   height: 32px;
   flex-shrink: 0;
@@ -83,15 +84,18 @@
 
 .entretenimiento__back {
   align-self: flex-start;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.62);
-  color: var(--brand-1);
-  border: none;
+  width: 142px;
+  height: 44px;
+  margin-top: 46px;
+  padding: 10px;
+  border: 0;
   border-radius: 100px;
-  padding: 12px 28px;
-  font-size: 1rem;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.62);
   box-shadow: var(--card-shadow);
+  color: var(--brand-1);
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.35;
+  cursor: pointer;
 }
