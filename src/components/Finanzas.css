@@ -1,0 +1,151 @@
+/* Figma frame: 412x1606. --u is one design pixel at the current width (the
+   app shell is at most 460px wide), so the whole page scales with the phone. */
+.finanzas {
+  --u: calc(min(100vw, 460px) / 412);
+
+  position: relative;
+  height: calc(1606 * var(--u));
+  /* clip, not hidden: hidden would make this the sticky header's scroll container */
+  overflow: clip;
+  background: var(--brand-secondary-2);
+  animation: finanzas-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Same entrance as the desktop Finanzas: fade in from the bottom */
+@keyframes finanzas-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+
+.finanzas > :not(.finanzas__header) {
+  position: absolute;
+}
+
+/* ---------- Header (sticky; everything else is laid out from the page top) ---------- */
+
+.finanzas__header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: calc(127 * var(--u));
+  margin-bottom: calc(-127 * var(--u));
+  background: rgba(233, 244, 246, 0.6);
+  backdrop-filter: blur(5.1px);
+  -webkit-backdrop-filter: blur(5.1px);
+}
+
+.finanzas__logo {
+  position: absolute;
+  top: calc(43 * var(--u));
+  left: 50%;
+  width: calc(250 * var(--u));
+  height: calc(50 * var(--u));
+  padding: 0;
+  border: 0;
+  border-radius: calc(25 * var(--u));
+  background: none;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+.finanzas__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.finanzas__logo:focus-visible {
+  outline: 2px solid var(--brand-3);
+  outline-offset: 3px;
+}
+
+/* ---------- Background shapes ---------- */
+
+.finanzas__green {
+  top: calc(813 * var(--u));
+  left: 0;
+  right: 0;
+  height: calc(793 * var(--u));
+  background: var(--brand-3);
+}
+
+/* Dark block with a fully rounded left side, behind the phone */
+.finanzas__dark {
+  top: calc(547 * var(--u));
+  left: 0;
+  right: 0;
+  height: calc(532 * var(--u));
+  border-radius: calc(251 * var(--u)) 0 0 calc(251 * var(--u));
+  background: var(--brand-2);
+}
+
+/* 924x655 box at (-191, 424); Figma shows the render at 105.71% height,
+   cropping its bottom edge */
+.finanzas__iphone {
+  top: calc(424 * var(--u));
+  left: calc(-191 * var(--u));
+  width: calc(924 * var(--u));
+  height: calc(655 * var(--u));
+  object-fit: cover;
+  object-position: top;
+}
+
+/* ---------- Copy ---------- */
+
+.finanzas__copy {
+  top: calc(151 * var(--u));
+  left: calc(43 * var(--u));
+  width: calc(343 * var(--u));
+  display: flex;
+  flex-direction: column;
+  gap: calc(25 * var(--u));
+}
+
+.finanzas__title {
+  width: calc(288 * var(--u));
+  margin: 0;
+  color: var(--brand-3);
+  font-weight: 800;
+  font-size: calc(65 * var(--u));
+  line-height: calc(67 * var(--u));
+}
+
+.finanzas__text {
+  margin: 0;
+  color: var(--brand-1);
+  font-weight: 500;
+  font-size: calc(20 * var(--u));
+  line-height: calc(42 * var(--u));
+}
+
+.finanzas__text span {
+  color: var(--brand-3);
+}
+
+/* ---------- Card + isologo ---------- */
+
+/* 257x410, centered at (214.5, 1262) */
+.finanzas__card {
+  top: calc(1057 * var(--u));
+  left: calc(86 * var(--u));
+  width: calc(257 * var(--u));
+  height: calc(410 * var(--u));
+  object-fit: cover;
+}
+
+.finanzas__isologo {
+  top: calc(1507 * var(--u));
+  left: 50%;
+  width: calc(50 * var(--u));
+  height: calc(50 * var(--u));
+  transform: translateX(-50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finanzas {
+    animation-duration: 0.01ms;
+  }
+}
