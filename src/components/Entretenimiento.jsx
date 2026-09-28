@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Entretenimiento.css'
 
-import fondo from '../assets/home/fondo-home.jpg'
 import logo from '../assets/home/logo-pill.svg'
 import iconEncuentros from '../assets/entretenimiento/icon-encuentros.svg'
 import iconTrivia from '../assets/entretenimiento/icon-trivia.svg'
@@ -13,6 +12,7 @@ import TriviaModal from './TriviaModal.jsx'
 import MemotestModal from './MemotestModal.jsx'
 import TatetiModal from './TatetiModal.jsx'
 import PuzleModal from './PuzleModal.jsx'
+import MobileStage from './MobileStage.jsx'
 
 const ENTERTAINMENT_CARDS = [
   { key: 'encuentros', label: 'Encuentros', icon: iconEncuentros, to: '/bienestar/encuentros' },
@@ -36,7 +36,7 @@ export default function Entretenimiento() {
 
   return (
     <div className="entretenimiento">
-      <img className="entretenimiento__bg" src={fondo} alt="" aria-hidden="true" />
+      <MobileStage />
       <img className="entretenimiento__logo" src={logo} alt="Cuidarte.ia" />
 
       <div className="entretenimiento__content">
