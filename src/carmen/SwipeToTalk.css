@@ -1,0 +1,99 @@
+/* Figma: "Swipe" (2059:10505) — white pill, teal knob; swiped, a teal fill
+   covers it with the label in light cyan and the knob at the right end.
+   --x is the knob's travel in px, --progress 0..1 (set by SwipeToTalk). */
+.swipe-to-talk {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 5px 3px 4px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--white);
+  font-family: inherit;
+  cursor: grab;
+  touch-action: none; /* the swipe must not scroll the page */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.swipe-to-talk--dragging {
+  cursor: grabbing;
+}
+
+.swipe-to-talk[aria-busy='true'] {
+  cursor: progress;
+}
+
+.swipe-to-talk:focus-visible {
+  outline: 2px solid var(--brand-3);
+  outline-offset: 3px;
+}
+
+/* Fill grows from the left edge to just past the knob */
+.swipe-to-talk__fill {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: calc(28px + var(--x));
+  height: 28px;
+  border-radius: 14px;
+  background: var(--brand-1);
+}
+
+.swipe-to-talk__knob {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: 28px;
+  height: 28px;
+  transform: translateX(var(--x));
+  pointer-events: none;
+}
+
+/* Spring back / snap into place when released (not while following the finger) */
+.swipe-to-talk:not(.swipe-to-talk--dragging) .swipe-to-talk__fill {
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.swipe-to-talk:not(.swipe-to-talk--dragging) .swipe-to-talk__knob {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.swipe-to-talk__spacer {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.swipe-to-talk__label {
+  position: relative;
+  padding: 0 10px;
+  color: var(--brand-1);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.07;
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Swiped ("swipe right" variant): label moves to where the knob started */
+.swipe-to-talk--active .swipe-to-talk__label {
+  color: var(--brand-secondary-1);
+  transform: translateX(-38px);
+}
+
+/* Mid-swipe the label turns light as the fill reaches it */
+.swipe-to-talk--dragging:not(.swipe-to-talk--active) .swipe-to-talk__label {
+  opacity: calc(1 - var(--progress) * 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swipe-to-talk *,
+  .swipe-to-talk__label {
+    transition-duration: 0.01ms !important;
+  }
+}
