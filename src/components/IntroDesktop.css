@@ -1,0 +1,228 @@
+.intro-desktop {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--brand-2);
+}
+
+.intro-desktop__bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(4.25px);
+  opacity: 0.8;
+  transform: scale(1.03);
+}
+
+.intro-desktop__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--brand-2);
+  opacity: 0.8;
+}
+
+/* Figma frame is 1920x1080: card starts at x=253, headline pill at x=1041 */
+.intro-desktop__content {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 40px 0 40px 13.2vw;
+}
+
+.intro-desktop__card {
+  flex-shrink: 0;
+  width: clamp(360px, 22.5vw, 432px);
+  min-height: 213px;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 39px;
+  border: 1px solid var(--brand-secondary-1);
+  border-radius: 20px;
+  background: rgba(0, 63, 68, 0.3);
+  backdrop-filter: blur(3.65px);
+}
+
+.intro-desktop__logo {
+  display: block;
+  width: min(298px, 100%);
+  height: auto;
+  transition: width 0.3s ease;
+}
+
+.intro-desktop__card--expanded .intro-desktop__logo {
+  width: 250px;
+}
+
+.intro-desktop__form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 39px;
+  animation: intro-desktop-reveal 0.35s ease both;
+}
+
+@keyframes intro-desktop-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.intro-desktop__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.intro-desktop__field {
+  width: 100%;
+  height: 49px;
+  padding: 0 20px;
+  border: 1px solid var(--brand-secondary-1);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--brand-secondary-2);
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 18px;
+  outline: none;
+  color-scheme: dark;
+}
+
+.intro-desktop__field::placeholder,
+.intro-desktop__placeholder {
+  color: var(--brand-secondary-2);
+  opacity: 0.3;
+}
+
+.intro-desktop__field:focus-visible {
+  box-shadow: 0 0 0 2px var(--brand-3);
+}
+
+.intro-desktop__dropdown {
+  position: relative;
+}
+
+.intro-desktop__dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.intro-desktop__dropdown-trigger > span {
+  flex: 1;
+}
+
+.intro-desktop__dropdown-trigger--selected {
+  background: var(--brand-secondary-1);
+  border-color: var(--brand-secondary-2);
+  color: var(--brand-1);
+}
+
+.intro-desktop__chevron {
+  flex-shrink: 0;
+  color: var(--brand-secondary-2);
+  opacity: 0.3;
+  transition: transform 0.2s ease;
+}
+
+.intro-desktop__dropdown-trigger--selected .intro-desktop__chevron {
+  color: var(--brand-1);
+  opacity: 1;
+}
+
+.intro-desktop__chevron--open {
+  transform: rotate(180deg);
+}
+
+.intro-desktop__dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.intro-desktop__dropdown-option {
+  width: 100%;
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--gray);
+  font-weight: 500;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.intro-desktop__dropdown-option:hover,
+.intro-desktop__dropdown-option:focus-visible {
+  background: var(--brand-secondary-2);
+  outline: none;
+}
+
+.intro-desktop__cta {
+  width: 100%;
+  padding: 15px 40px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--brand-3);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.07;
+  filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.intro-desktop__cta:hover {
+  background: var(--brand-secondary-2);
+}
+
+.intro-desktop__cta:active {
+  background: var(--brand-2);
+  color: var(--brand-secondary-2);
+}
+
+.intro-desktop__headline {
+  flex-shrink: 0;
+  align-self: center;
+  width: calc(46.7vw + 18px);
+  margin: 0 -18px 0 0;
+  padding: 30px 0 30px clamp(60px, 6vw, 115px);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 2px solid var(--brand-3);
+  border-right: 0;
+  border-radius: 1000px 0 0 1000px;
+  color: var(--brand-secondary-1);
+  font-weight: 700;
+  font-size: clamp(40px, 3.125vw, 60px);
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.intro-desktop__headline-accent {
+  color: var(--brand-3);
+}
