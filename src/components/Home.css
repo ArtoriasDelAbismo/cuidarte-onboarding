@@ -129,6 +129,16 @@
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
+/* Figma: "Swipe" at y=199 of the 917px frame, centered — just above the
+   device's screen, tracking the photo like the rest of the layout */
+.home__swipe {
+  position: absolute;
+  top: calc(199 / 917 * 100%);
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+}
+
 .home__grid {
   position: absolute;
   left: 50%;

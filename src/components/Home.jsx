@@ -4,6 +4,7 @@ import './Home.css'
 import { DEVICE_HOTSPOTS } from '../utils/deviceHotspots'
 import MobileStage from './MobileStage.jsx'
 import { useCarmenContext } from '../carmen/carmenContext'
+import SwipeToTalk from '../carmen/SwipeToTalk.jsx'
 
 import logo from '../assets/home/logo-pill.svg'
 import hotspotRing from '../assets/desktop/hotspot.svg'
@@ -40,7 +41,7 @@ export default function Home() {
 
   return (
     <div className={`home${carmenActive ? ' home--carmen-active' : ''}`}>
-      <MobileStage>
+      <MobileStage carmenTap={false}>
         {DEVICE_HOTSPOTS.map(({ key, label, mobile }) => {
           const open = !carmenActive && openHotspot === key
           return (
@@ -65,6 +66,12 @@ export default function Home() {
       </MobileStage>
 
       <img className="home__logo" src={logo} alt="Cuidarte.ia" />
+
+      {carmen && (
+        <div className="home__swipe">
+          <SwipeToTalk carmen={carmen} />
+        </div>
+      )}
 
       <nav className="home__grid">
         {NAV_ITEMS.map((item) => (
