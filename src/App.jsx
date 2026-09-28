@@ -15,11 +15,21 @@ import EntretenimientoDesktop from './components/EntretenimientoDesktop.jsx'
 import Encuentros from './components/Encuentros.jsx'
 import EncuentrosPlan from './components/EncuentrosPlan.jsx'
 import EncuentrosListo from './components/EncuentrosListo.jsx'
+import EncuentrosDesktop, { EncuentrosPlanDesktop, EncuentrosListoDesktop } from './components/EncuentrosDesktop.jsx'
 import Placeholder from './components/Placeholder.jsx'
 import useIsDesktop from './utils/useIsDesktop.js'
 
 // Routes that have a desktop layout; everything else stays in the mobile-width shell.
-const DESKTOP_ROUTES = new Set(['/', '/home', '/salud', '/seguridad', '/bienestar'])
+const DESKTOP_ROUTES = new Set([
+  '/',
+  '/home',
+  '/salud',
+  '/seguridad',
+  '/bienestar',
+  '/bienestar/encuentros',
+  '/bienestar/encuentros/planificar',
+  '/bienestar/encuentros/listo',
+])
 
 export default function App() {
   const isDesktop = useIsDesktop()
@@ -40,9 +50,16 @@ export default function App() {
           <Route path="/bienestar" element={isDesktop ? <EntretenimientoDesktop /> : <Entretenimiento />} />
         </Route>
         <Route path="/bienestar" element={<Entretenimiento />} />
-        <Route path="/bienestar/encuentros" element={<Encuentros />} />
-        <Route path="/bienestar/encuentros/planificar" element={<EncuentrosPlan />} />
-        <Route path="/bienestar/encuentros/listo" element={<EncuentrosListo />} />
+        {/* Encuentros is its own full-screen flow on desktop, outside DesktopScene */}
+        <Route path="/bienestar/encuentros" element={isDesktop ? <EncuentrosDesktop /> : <Encuentros />} />
+        <Route
+          path="/bienestar/encuentros/planificar"
+          element={isDesktop ? <EncuentrosPlanDesktop /> : <EncuentrosPlan />}
+        />
+        <Route
+          path="/bienestar/encuentros/listo"
+          element={isDesktop ? <EncuentrosListoDesktop /> : <EncuentrosListo />}
+        />
         <Route path="/finanzas" element={<Placeholder title="Finanzas" />} />
       </Routes>
     </div>
