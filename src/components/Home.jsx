@@ -1,13 +1,12 @@
 import { useNavigate } from 'react-router-dom'
 import './Home.css'
 
-import blob from '../assets/home/blob-home.svg'
-import logo from '../assets/home/logo-compact.svg'
+import fondo from '../assets/home/fondo-home.jpg'
+import logo from '../assets/home/logo-pill.svg'
 import iconSalud from '../assets/home/icon-salud.svg'
 import iconSeguridad from '../assets/home/icon-seguridad.svg'
 import iconBienestar from '../assets/home/icon-entretenimiento.svg'
 import iconFinanzas from '../assets/home/icon-finanzas.svg'
-import AssistantOrb from './AssistantOrb.jsx'
 
 const NAV_ITEMS = [
   { key: 'salud', label: 'Salud', icon: iconSalud, to: '/salud' },
@@ -16,16 +15,15 @@ const NAV_ITEMS = [
   { key: 'finanzas', label: 'Finanzas', icon: iconFinanzas, to: '/finanzas' },
 ]
 
+// Figma: mobile "Home" (1357:2271) — the Carmen device photo with the section
+// buttons laid over its base.
 export default function Home() {
   const navigate = useNavigate()
 
   return (
     <div className="home">
-      <img className="home__blob" src={blob} alt="" aria-hidden="true" />
-      <div className="home__glow" aria-hidden="true" />
+      <img className="home__bg" src={fondo} alt="" aria-hidden="true" />
       <img className="home__logo" src={logo} alt="Cuidarte.ia" />
-
-      <AssistantOrb />
 
       <nav className="home__grid">
         {NAV_ITEMS.map((item) => (
