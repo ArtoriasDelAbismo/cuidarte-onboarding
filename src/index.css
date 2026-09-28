@@ -46,3 +46,8 @@ button {
 p {
   margin: 0;
 }
+
+.app-shell--wide {
+  max-width: none;
+  box-shadow: none;
+}
