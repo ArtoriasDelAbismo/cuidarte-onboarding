@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Seguridad.css'
 
-import fondo from '../assets/home/fondo-home.jpg'
 import logo from '../assets/home/logo-pill.svg'
 // Figma uses the same icon for caída and botón de pánico.
 import iconCaida from '../assets/seguridad/icon-caida.svg'
@@ -21,6 +20,7 @@ import videoAberturas from '../assets/videos/seguridad/apertura-aberturas.mp4'
 import videoAforo from '../assets/videos/seguridad/aforo.mp4'
 
 import VideoModal from './VideoModal.jsx'
+import MobileStage from './MobileStage.jsx'
 import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const SECURITY_CARDS = [
@@ -42,7 +42,7 @@ export default function Seguridad() {
 
   return (
     <div className="seguridad">
-      <img className="seguridad__bg" src={fondo} alt="" aria-hidden="true" />
+      <MobileStage />
       <img className="seguridad__logo" src={logo} alt="Cuidarte.ia" />
 
       <div className="seguridad__content">

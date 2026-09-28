@@ -9,17 +9,6 @@
   background: var(--brand-secondary-2);
 }
 
-.seguridad__bg {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: calc(994 / 917 * 100%);
-  object-fit: cover;
-  object-position: center bottom;
-  pointer-events: none;
-}
-
 /* Shadow drawn in CSS, not in the SVG: SVG filters inside <img> get rasterized
    at low resolution on some phones (notably iOS Safari), blurring the logo */
 .seguridad__logo {
