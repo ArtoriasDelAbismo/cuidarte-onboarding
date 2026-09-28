@@ -1,38 +1,8 @@
-import { useState } from 'react'
 import './TriviaModal.css'
-
-const QUESTIONS = [
-  { question: '¿Cuántos días tiene una semana?', options: ['5', '6', '7'], correct: 2 },
-  { question: '¿Qué océano es más grande?', options: ['Atlántico', 'Pacífico'], correct: 1 },
-  { question: '¿De qué color es el cielo en un día despejado?', options: ['Celeste', 'Verde', 'Gris'], correct: 0 },
-  { question: '¿Cuál es el primer mes del año?', options: ['Enero', 'Marzo', 'Diciembre'], correct: 0 },
-  { question: '¿Cuántas patas tiene un perro?', options: ['2', '4', '6'], correct: 1 },
-]
-
-const ADVANCE_DELAY_MS = 900
+import { useTrivia } from '../utils/games'
 
 export default function TriviaModal({ onClose }) {
-  const [index, setIndex] = useState(0)
-  const [selected, setSelected] = useState(null)
-  const [score, setScore] = useState(0)
-  const [finished, setFinished] = useState(false)
-
-  const current = QUESTIONS[index]
-
-  function handleSelect(optionIndex) {
-    if (selected !== null) return
-    setSelected(optionIndex)
-    if (optionIndex === current.correct) setScore((s) => s + 1)
-
-    setTimeout(() => {
-      if (index + 1 < QUESTIONS.length) {
-        setIndex((i) => i + 1)
-        setSelected(null)
-      } else {
-        setFinished(true)
-      }
-    }, ADVANCE_DELAY_MS)
-  }
+  const { index, total, current, selected, score, finished, select } = useTrivia()
 
   return (
     <div className="trivia-modal-overlay" onClick={onClose}>
@@ -46,7 +16,7 @@ export default function TriviaModal({ onClose }) {
         {!finished ? (
           <>
             <span className="trivia-modal-progress">
-              {index + 1}/{QUESTIONS.length}
+              {index + 1}/{total}
             </span>
             <div className="trivia-modal-question">
               <p>{current.question}</p>
@@ -65,7 +35,7 @@ export default function TriviaModal({ onClose }) {
                       (showFeedback && isCorrectOption ? ' trivia-modal-option--correct' : '') +
                       (isWrongSelection ? ' trivia-modal-option--incorrect' : '')
                     }
-                    onClick={() => handleSelect(i)}
+                    onClick={() => select(i)}
                     disabled={showFeedback}
                   >
                     {option}
@@ -78,7 +48,7 @@ export default function TriviaModal({ onClose }) {
           <div className="trivia-modal-result">
             <p className="trivia-modal-result-title">¡Listo!</p>
             <p className="trivia-modal-result-score">
-              Acertaste {score} de {QUESTIONS.length}
+              Acertaste {score} de {total}
             </p>
           </div>
         )}
