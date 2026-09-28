@@ -7,6 +7,9 @@
   --nav-width: 284px;
   /* nav is a fixed-size card: 30 + 39 + 40 + 4x70 + 3x15 + 30 */
   --nav-height: 464px;
+  /* section option column (DesktopOptionList) sits this far left of the nav */
+  --option-list-gap: 30px;
+  --option-list-width: 240px;
 
   position: relative;
   height: 100dvh;
