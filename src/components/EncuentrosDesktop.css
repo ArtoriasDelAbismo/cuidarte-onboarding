@@ -1,0 +1,362 @@
+/* Figma frames are 1920x1080. --u is one design pixel, shrunk to fit the
+   viewport (height-bound, with a width floor so the plan row never overflows). */
+.encuentros-desktop {
+  --u: min(1px, calc(100dvh / 1080), calc(100vw / 1400));
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+
+  position: relative;
+  height: 100dvh;
+  /* clip, not hidden: the glows overhang the viewport, and a hidden overflow
+     can still be scrolled by focus changes, shifting the whole stage */
+  overflow: clip;
+  background: var(--brand-2);
+  animation: encuentros-desktop-fade 0.5s ease both;
+}
+
+@keyframes encuentros-desktop-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.encuentros-desktop > * {
+  position: absolute;
+}
+
+/* ---------- Stage decoration ---------- */
+
+/* Two 3180x626 ellipses in the background color curve the photo band */
+.encuentros-desktop__mask {
+  left: 50%;
+  width: calc(3180 * var(--u));
+  height: calc(626 * var(--u));
+  border-radius: 50%;
+  background: var(--brand-2);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.encuentros-desktop__mask--top {
+  top: calc(50% - 512 * var(--u));
+}
+
+.encuentros-desktop__mask--bottom {
+  top: calc(50% + 513 * var(--u));
+}
+
+/* Green glows fading in from the sides (Figma "Rectangle 39/40"): 933px-wide
+   gradients starting 535px either side of center, cropped by the viewport */
+.encuentros-desktop__glow {
+  top: 0;
+  bottom: 0;
+  width: calc(933 * var(--u));
+  pointer-events: none;
+}
+
+.encuentros-desktop__glow--left {
+  right: calc(50% + 535 * var(--u));
+  background: linear-gradient(
+    270deg,
+    rgba(161, 226, 152, 0) 0%,
+    rgba(161, 226, 152, 0.48) 66.12%,
+    var(--brand-3) 133.52%
+  );
+}
+
+.encuentros-desktop__glow--right {
+  left: calc(50% + 535 * var(--u));
+  background: linear-gradient(
+    90deg,
+    rgba(161, 226, 152, 0) 0%,
+    rgba(161, 226, 152, 0.38) 66.12%,
+    var(--brand-3) 133.52%
+  );
+}
+
+/* ---------- Intro (Figma "Encuentros") ---------- */
+
+.encuentros-desktop__carousel {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: calc(556 * var(--u));
+  overflow: hidden;
+  opacity: 0.18;
+  transform: translateY(-50%);
+}
+
+.encuentros-desktop__carousel-track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: encuentros-desktop-scroll 48s linear infinite;
+}
+
+.encuentros-desktop__photo {
+  flex: none;
+  width: calc(835 * var(--u));
+  height: 100%;
+  margin-right: calc(15 * var(--u));
+  border-radius: calc(15 * var(--u));
+  background-color: var(--white);
+  background-size: cover;
+  background-position: center;
+}
+
+/* The photo list is doubled, so -50% loops seamlessly */
+@keyframes encuentros-desktop-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.encuentros-desktop__logo {
+  z-index: 1;
+  top: calc(50 * var(--u));
+  left: 50%;
+  width: calc(298 * var(--u));
+  transform: translateX(-50%);
+}
+
+.encuentros-desktop__phrase {
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  display: flex;
+  gap: calc(19 * var(--u));
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 900;
+  font-size: calc(40 * var(--u));
+  line-height: 1.375;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  animation: encuentros-desktop-phrase 0.6s var(--ease) both;
+}
+
+@keyframes encuentros-desktop-phrase {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+}
+
+.encuentros-desktop__accent {
+  color: var(--brand-3);
+}
+
+.encuentros-desktop__underline {
+  color: var(--brand-secondary-1);
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-position: from-font;
+}
+
+/* ---------- Buttons ---------- */
+
+.encuentros-desktop__actions {
+  z-index: 1;
+  bottom: calc(72 * var(--u));
+  left: 50%;
+  display: flex;
+  gap: calc(51 * var(--u));
+  transform: translateX(-50%);
+}
+
+.encuentros-desktop__button {
+  width: calc(212 * var(--u));
+  height: calc(61 * var(--u));
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  background: var(--brand-secondary-2);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: calc(24 * var(--u));
+  filter: drop-shadow(2px 2px 2.5px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.encuentros-desktop__button:hover:not(:disabled) {
+  background: var(--white);
+}
+
+.encuentros-desktop__button--dark {
+  background: var(--brand-1);
+  color: var(--brand-secondary-1);
+}
+
+.encuentros-desktop__button--dark:hover:not(:disabled) {
+  background: #007b8a;
+}
+
+/* Figma "Encuentros 1": Continuar greyed out until both options are chosen */
+.encuentros-desktop__button:disabled {
+  border-color: var(--gray);
+  color: var(--gray);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Plan (Figma "Encuentros 1") ---------- */
+
+.encuentros-desktop__plan {
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: calc(39 * var(--u));
+  transform: translate(-50%, -50%);
+}
+
+.encuentros-desktop__plan-label {
+  margin: 0;
+  color: var(--brand-3);
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 600;
+  font-size: calc(35 * var(--u));
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.encuentros-desktop__selector {
+  position: relative;
+  width: calc(400 * var(--u));
+}
+
+.encuentros-desktop__selector-trigger {
+  width: 100%;
+  height: calc(52 * var(--u));
+  padding: 0 calc(25 * var(--u));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid var(--brand-secondary-1);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--brand-secondary-1);
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 900;
+  font-size: calc(22 * var(--u));
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.encuentros-desktop__selector-trigger > span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.encuentros-desktop__selector-trigger:hover {
+  background: rgba(198, 254, 255, 0.1);
+}
+
+.encuentros-desktop__selector-trigger--selected,
+.encuentros-desktop__selector-trigger--selected:hover {
+  background: var(--brand-secondary-1);
+  color: var(--brand-1);
+}
+
+.encuentros-desktop__arrow {
+  flex-shrink: 0;
+  width: calc(16 * var(--u));
+  height: calc(16 * var(--u));
+  transition: transform 0.2s ease;
+}
+
+.encuentros-desktop__arrow--open {
+  transform: rotate(180deg);
+}
+
+.encuentros-desktop__selector-menu {
+  position: absolute;
+  top: calc(100% + 22 * var(--u));
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: calc(20 * var(--u)) 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: calc(20 * var(--u));
+  border-radius: 15px;
+  background: var(--white);
+  animation: encuentros-desktop-menu 0.2s ease both;
+}
+
+@keyframes encuentros-desktop-menu {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+.encuentros-desktop__selector-menu button {
+  width: 100%;
+  padding: calc(10 * var(--u)) calc(20 * var(--u));
+  border: 0;
+  background: transparent;
+  color: var(--brand-1);
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 500;
+  font-size: calc(22 * var(--u));
+  line-height: 1.27;
+  text-align: left;
+  cursor: pointer;
+}
+
+.encuentros-desktop__selector-menu button:hover,
+.encuentros-desktop__selector-menu button:focus-visible,
+.encuentros-desktop__selector-menu [aria-selected='true'] button {
+  background: var(--brand-secondary-2);
+  outline: none;
+}
+
+/* ---------- Listo (Figma "Encuentros 2") ---------- */
+
+.encuentros-desktop__listo {
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Frank Ruhl Libre', serif;
+  font-weight: 900;
+  font-size: calc(68 * var(--u));
+  white-space: nowrap;
+}
+
+.encuentros-desktop__listo p {
+  margin: 0;
+}
+
+.encuentros-desktop__listo-title {
+  color: var(--brand-3);
+  line-height: calc(55 * var(--u));
+  margin-bottom: calc(40 * var(--u)) !important;
+}
+
+.encuentros-desktop__listo-body {
+  color: var(--brand-secondary-1);
+  line-height: calc(86 * var(--u));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .encuentros-desktop,
+  .encuentros-desktop * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .encuentros-desktop__carousel-track {
+    animation: none;
+  }
+}
