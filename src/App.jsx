@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Intro from './components/Intro.jsx'
 import IntroDesktop from './components/IntroDesktop.jsx'
 import Registro from './components/Registro.jsx'
@@ -6,6 +6,7 @@ import Loading from './components/Loading.jsx'
 import Home from './components/Home.jsx'
 import HomeDesktop from './components/HomeDesktop.jsx'
 import DesktopScene from './components/DesktopScene.jsx'
+import MobileCarmenLayout from './carmen/MobileCarmenLayout.jsx'
 import Salud from './components/Salud.jsx'
 import SaludDesktop from './components/SaludDesktop.jsx'
 import Seguridad from './components/Seguridad.jsx'
@@ -42,8 +43,9 @@ export default function App() {
         <Route path="/" element={isDesktop ? <IntroDesktop /> : <Intro />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/cargando" element={<Loading />} />
-        {/* On desktop these share one mounted scene (photo, hotspots, nav) */}
-        <Route element={isDesktop ? <DesktopScene /> : <Outlet />}>
+        {/* These share one Carmen connection: on desktop inside one mounted scene
+            (photo, hotspots, nav), on mobile drawn on each screen's device photo */}
+        <Route element={isDesktop ? <DesktopScene /> : <MobileCarmenLayout />}>
           <Route path="/home" element={isDesktop ? <HomeDesktop /> : <Home />} />
           <Route path="/salud" element={isDesktop ? <SaludDesktop /> : <Salud />} />
           <Route path="/seguridad" element={isDesktop ? <SeguridadDesktop /> : <Seguridad />} />
