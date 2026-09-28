@@ -10,23 +10,135 @@
   flex-direction: column;
 }
 
-.home__bg {
+/* Box with the photo's own aspect ratio, sized like `object-fit: cover` +
+   bottom-center: 994/917 of the screen height, or wider screens' width if that
+   is bigger. Hotspots are placed in % of this box, so they stay on the device. */
+.home__stage {
   position: absolute;
-  left: 0;
+  left: 50%;
   bottom: 0;
+  height: max(calc(994 / 917 * 100%), calc(min(100vw, 460px) * 1988 / 1118));
+  aspect-ratio: 1118 / 1988;
+  transform: translateX(-50%);
+}
+
+.home__bg {
+  display: block;
   width: 100%;
-  height: calc(994 / 917 * 100%);
-  object-fit: cover;
-  object-position: center bottom;
+  height: 100%;
   pointer-events: none;
 }
 
-/* The SVG includes the pill's drop shadow, hence 258x58 for a 250x50 pill */
+/* ---------- Hotspots (tap to show the feature's name) ---------- */
+
+.home__hotspot {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Soft pulse so the dots read as tappable (no hover on touch screens) */
+.home__hotspot::before {
+  content: '';
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  background: rgba(161, 226, 152, 0.45);
+  animation: home-hotspot-pulse 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+.home__hotspot--open::before {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes home-hotspot-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  70%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+.home__hotspot-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%) scale(calc(22 / 30));
+  transition: transform 0.2s ease;
+}
+
+.home__hotspot--open .home__hotspot-ring {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.home__hotspot-label {
+  --label-x: -50%;
+
+  position: absolute;
+  bottom: calc(100% - 2px);
+  left: 50%;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: rgba(233, 244, 246, 0.85);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--card-shadow);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(var(--label-x), 6px);
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Dots near the screen edges anchor their label inward so it stays on screen */
+.home__hotspot--left .home__hotspot-label {
+  --label-x: -22px;
+}
+
+.home__hotspot--right .home__hotspot-label {
+  --label-x: calc(-100% + 22px);
+}
+
+.home__hotspot--open .home__hotspot-label {
+  opacity: 1;
+  transform: translate(var(--label-x), 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home__hotspot::before {
+    animation: none;
+  }
+}
+
+/* Shadow drawn in CSS, not in the SVG: SVG filters inside <img> get rasterized
+   at low resolution on some phones (notably iOS Safari), blurring the logo */
 .home__logo {
   position: relative;
   display: block;
-  width: 258px;
+  width: 250px;
+  height: 50px;
   margin: 43px auto 0;
+  border-radius: 25px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .home__grid {
