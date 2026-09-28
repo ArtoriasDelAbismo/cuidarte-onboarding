@@ -34,7 +34,9 @@ body {
   max-width: 460px;
   min-height: 100dvh;
   position: relative;
-  overflow-x: hidden;
+  /* clip, not hidden: hidden turns the shell into a scroll container, which
+     breaks position: sticky inside pages (e.g. the mobile Finanzas header) */
+  overflow-x: clip;
   background: var(--brand-secondary-2);
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
 }
