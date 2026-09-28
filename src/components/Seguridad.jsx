@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Seguridad.css'
 
-import blob from '../assets/home/blob-home.svg'
-import logo from '../assets/home/logo-compact.svg'
+import fondo from '../assets/home/fondo-home.jpg'
+import logo from '../assets/home/logo-pill.svg'
+// Figma uses the same icon for caída and botón de pánico.
 import iconCaida from '../assets/seguridad/icon-caida.svg'
 import iconPanico from '../assets/seguridad/icon-panico.svg'
 import iconAberturas from '../assets/seguridad/icon-aberturas.svg'
@@ -20,7 +21,6 @@ import videoAberturas from '../assets/videos/seguridad/apertura-aberturas.mp4'
 import videoAforo from '../assets/videos/seguridad/aforo.mp4'
 
 import VideoModal from './VideoModal.jsx'
-import AssistantOrb from './AssistantOrb.jsx'
 import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const SECURITY_CARDS = [
@@ -42,11 +42,8 @@ export default function Seguridad() {
 
   return (
     <div className="seguridad">
-      <img className="seguridad__blob" src={blob} alt="" aria-hidden="true" />
-      <div className="seguridad__glow" aria-hidden="true" />
+      <img className="seguridad__bg" src={fondo} alt="" aria-hidden="true" />
       <img className="seguridad__logo" src={logo} alt="Cuidarte.ia" />
-
-      <AssistantOrb />
 
       <div className="seguridad__content">
         <div className="seguridad__list">
