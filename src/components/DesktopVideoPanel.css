@@ -1,27 +1,49 @@
-/* Rendered inside DesktopScene; the --nav-* and --glass-* tokens come from there. */
+/* Rendered inside DesktopScene; the --glass-* and --ease tokens come from there. */
 
-/* Figma: "Videos - Salud/Seguridad" — portrait video in a glass frame, placed left of the button column */
+/* Dark backdrop over the whole scene (nav and Carmen link included) */
+.desktop-video-panel__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 20, 23, 0.78);
+  backdrop-filter: blur(3px);
+  animation: desktop-video-panel-fade 0.3s ease both;
+}
+
+@keyframes desktop-video-panel-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.desktop-video-panel__modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: desktop-video-panel-in 0.45s var(--ease) both;
+}
+
+@keyframes desktop-video-panel-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+/* Figma: "Videos - Salud/Seguridad" — portrait video in a 490x857 glass frame.
+   Leaves room for the Cerrar button (44px + 20px gap) and 48px margins. */
 .desktop-video-panel__video {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  right: calc(var(--nav-right) + var(--nav-width) + 2 * var(--option-list-gap) + var(--option-list-width));
-  height: min(857px, calc(100dvh - 96px));
+  height: min(857px, calc(100dvh - 160px));
   aspect-ratio: 490 / 857;
   padding: 15px;
   border-radius: 15px;
   background: var(--glass-bg);
   backdrop-filter: blur(4.5px);
   box-shadow: var(--glass-shadow);
-  transform: translateY(-50%);
-  animation: desktop-video-panel-video-in 0.45s var(--ease) both;
-}
-
-@keyframes desktop-video-panel-video-in {
-  from {
-    opacity: 0;
-    scale: 0.96;
-  }
 }
 
 .desktop-video-panel__video video {
@@ -33,8 +55,32 @@
   background: var(--brand-2);
 }
 
+/* Same pill as the Bienestar game pop-ups' Cerrar */
+.desktop-video-panel__close {
+  width: 142px;
+  height: 44px;
+  padding: 10px;
+  border: 0;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--card-shadow);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.desktop-video-panel__close:hover,
+.desktop-video-panel__close:focus-visible {
+  background: var(--white);
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .desktop-video-panel__video {
+  .desktop-video-panel__overlay,
+  .desktop-video-panel__modal {
     animation-duration: 0.01ms;
   }
 }
