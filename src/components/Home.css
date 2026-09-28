@@ -10,25 +10,6 @@
   flex-direction: column;
 }
 
-/* Box with the photo's own aspect ratio, sized like `object-fit: cover` +
-   bottom-center: 994/917 of the screen height, or wider screens' width if that
-   is bigger. Hotspots are placed in % of this box, so they stay on the device. */
-.home__stage {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  height: max(calc(994 / 917 * 100%), calc(min(100vw, 460px) * 1988 / 1118));
-  aspect-ratio: 1118 / 1988;
-  transform: translateX(-50%);
-}
-
-.home__bg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
 /* ---------- Hotspots (tap to show the feature's name) ---------- */
 
 .home__hotspot {

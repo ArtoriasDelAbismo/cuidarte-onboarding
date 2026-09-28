@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Home.css'
 import { DEVICE_HOTSPOTS } from '../utils/deviceHotspots'
+import MobileStage from './MobileStage.jsx'
 
-import fondo from '../assets/home/fondo-home.jpg'
 import logo from '../assets/home/logo-pill.svg'
 import hotspotRing from '../assets/desktop/hotspot.svg'
 import iconSalud from '../assets/home/icon-salud.svg'
@@ -36,9 +36,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="home__stage">
-        <img className="home__bg" src={fondo} alt="" aria-hidden="true" />
-
+      <MobileStage>
         {DEVICE_HOTSPOTS.map(({ key, label, mobile }) => {
           const open = openHotspot === key
           return (
@@ -58,7 +56,7 @@ export default function Home() {
             </button>
           )
         })}
-      </div>
+      </MobileStage>
 
       <img className="home__logo" src={logo} alt="Cuidarte.ia" />
 
