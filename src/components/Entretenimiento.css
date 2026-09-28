@@ -20,12 +20,16 @@
   pointer-events: none;
 }
 
-/* The SVG includes the pill's drop shadow, hence 258x58 for a 250x50 pill */
+/* Shadow drawn in CSS, not in the SVG: SVG filters inside <img> get rasterized
+   at low resolution on some phones (notably iOS Safari), blurring the logo */
 .entretenimiento__logo {
   position: relative;
   display: block;
-  width: 258px;
+  width: 250px;
+  height: 50px;
   margin: 43px auto 0;
+  border-radius: 25px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 /* Cards (5x52 + 4x10 = 300px) + gap (46px) + Volver (44px) + bottom margin (52px) = 442px */
