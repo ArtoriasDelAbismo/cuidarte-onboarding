@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import './DesktopVideoPanel.css'
+import DesktopOptionList from './DesktopOptionList.jsx'
 import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
-// Section panel shared by the desktop Salud and Seguridad screens: a column of
-// buttons next to the DesktopScene nav, each opening its video in a glass frame.
+// Section panel shared by the desktop Salud and Seguridad screens: a DesktopOptionList
+// whose buttons each open their video in a glass frame.
 // `items`: [{ key, label, icons: [src], poster, src }] — `key` is what
 // notifyVideoOpened reports, so it must match the mobile screen's ids.
 export default function DesktopVideoPanel({ label, items }) {
@@ -40,25 +41,13 @@ export default function DesktopVideoPanel({ label, items }) {
 
   return (
     <>
-      <ul className="desktop-video-panel__list" ref={panelRef} aria-label={label}>
-        {items.map((item) => (
-          <li key={item.key}>
-            <button
-              type="button"
-              className={`desktop-video-panel__item${item.key === activeKey ? ' desktop-video-panel__item--active' : ''}`}
-              onClick={() => toggleVideo(item.key)}
-              aria-pressed={item.key === activeKey}
-            >
-              <span className="desktop-video-panel__icons">
-                {item.icons.map((icon, index) => (
-                  <img key={index} src={icon} alt="" aria-hidden="true" width="32" height="32" />
-                ))}
-              </span>
-              {item.label}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <DesktopOptionList
+        ref={panelRef}
+        label={label}
+        items={items}
+        activeKey={activeKey}
+        onSelect={(item) => toggleVideo(item.key)}
+      />
 
       {activeItem && (
         <div className="desktop-video-panel__video" ref={videoRef} role="dialog" aria-label={activeItem.label}>
