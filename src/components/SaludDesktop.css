@@ -1,0 +1,104 @@
+/* Rendered inside DesktopScene; the --nav-* and --glass-* tokens come from there. */
+
+/* Figma: 30px left of the nav, bottom-aligned with it */
+.salud-desktop__vitals {
+  --gap-to-nav: 30px;
+
+  position: absolute;
+  top: 50%;
+  right: calc(var(--nav-right) + var(--nav-width) + var(--gap-to-nav));
+  width: 240px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateY(calc(var(--nav-height) / 2 - 100%));
+  animation: salud-desktop-in 0.5s var(--ease) both;
+}
+
+@keyframes salud-desktop-in {
+  from {
+    opacity: 0;
+    translate: 24px 0;
+  }
+}
+
+.salud-desktop__vital {
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--glass-shadow);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: normal;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.salud-desktop__vital:hover,
+.salud-desktop__vital:focus-visible,
+.salud-desktop__vital--active {
+  background: var(--brand-secondary-2);
+  outline: none;
+}
+
+.salud-desktop__vital-icons {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.salud-desktop__vital-icons img {
+  display: block;
+}
+
+/* Figma: "Videos - Salud" — portrait video in a glass frame, placed left of the vitals column */
+.salud-desktop__video {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: calc(var(--nav-right) + var(--nav-width) + 30px + 240px + 30px);
+  height: min(857px, calc(100dvh - 96px));
+  aspect-ratio: 490 / 857;
+  padding: 15px;
+  border-radius: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--glass-shadow);
+  transform: translateY(-50%);
+  animation: salud-desktop-video-in 0.45s var(--ease) both;
+}
+
+@keyframes salud-desktop-video-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.salud-desktop__video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+  background: var(--brand-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .salud-desktop__vitals,
+  .salud-desktop__video {
+    animation-duration: 0.01ms;
+  }
+}
