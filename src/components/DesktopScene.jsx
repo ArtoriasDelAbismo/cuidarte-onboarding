@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import './DesktopScene.css'
+import { DEVICE_HOTSPOTS } from '../utils/deviceHotspots'
 
 import homeBg from '../assets/desktop/home-bg.jpg'
 import logo from '../assets/desktop/logo-secundario.svg'
@@ -18,15 +19,9 @@ const NAV_ITEMS = [
   { key: 'finanzas', label: 'Finanzas', icon: iconFinanzas, to: '/finanzas' },
 ]
 
-// Positions are % of the background photo (2752x1536), converted from the
-// 1920x1080 Figma frame so the dots stay pinned to the device at any viewport.
-const HOTSPOTS = [
-  { key: 'pantalla', label: 'Pantalla interactiva', x: 64.08, y: 25.19 },
-  { key: 'nfc', label: 'Soporte inteligente NFC', x: 47.18, y: 52.87 },
-  { key: 'llamada', label: 'Responder/finalizar llamada', x: 49.61, y: 61.85 },
-  { key: 'parlante', label: 'Parlante integrado', x: 59.07, y: 67.59 },
-  { key: 'microfonos', label: 'Micrófonos direccionales', x: 37.52, y: 68.24 },
-]
+// Positions are % of the background photo, so the dots stay pinned to the
+// device at any viewport (see utils/deviceHotspots.js).
+const HOTSPOTS = DEVICE_HOTSPOTS.map(({ key, label, desktop }) => ({ key, label, ...desktop }))
 
 const CARMEN_URL = 'https://carmen-assistant.netlify.app/'
 
