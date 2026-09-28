@@ -1,0 +1,136 @@
+import { useCallback, useRef, useState } from 'react'
+import { BACKEND_URL, CARMEN_JWT } from './config'
+
+// status: 'idle' | 'connecting' | 'connected' | 'error'
+// mood: 'happy' | 'concerned' | 'sad' | 'neutral'
+
+function describeVoiceError(err) {
+  if (err instanceof DOMException) {
+    if (err.name === 'NotFoundError') return 'No microphone found on this device/browser.'
+    if (err.name === 'NotAllowedError') {
+      return 'Microphone access was blocked. Allow it in the browser site settings and try again.'
+    }
+    if (err.name === 'NotReadableError') return 'The microphone is in use by another app or unavailable.'
+  }
+  return err instanceof Error ? err.message : 'Failed to connect'
+}
+
+// Parallel implementation of useRealtimeVoice, swapped in for the ElevenLabs
+// accent evaluation branch — same external shape (status/error/connect/
+// disconnect/speakRef) so CarmenScene barely has to change to A/B the two.
+export function useElevenLabsVoice(options) {
+  const [status, setStatus] = useState('idle')
+  const [error, setError] = useState(null)
+
+  const onExpressionChangeRef = useRef(options?.onExpressionChange)
+  onExpressionChangeRef.current = options?.onExpressionChange
+
+  // output-audio amplitude of Carmen's live reply, smoothed 0..1 — read every frame by CarmenFace
+  const speakRef = useRef(0)
+
+  const conversationRef = useRef(null)
+  const rafRef = useRef(null)
+
+  const teardown = useCallback(() => {
+    if (rafRef.current != null) cancelAnimationFrame(rafRef.current)
+    rafRef.current = null
+    speakRef.current = 0
+  }, [])
+
+  const disconnect = useCallback(async () => {
+    await conversationRef.current?.endSession()
+    conversationRef.current = null
+    teardown()
+    setStatus('idle')
+  }, [teardown])
+
+  const connect = useCallback(async () => {
+    if (status === 'connecting' || status === 'connected') return
+    setError(null)
+    setStatus('connecting')
+
+    try {
+      // Request permission explicitly first for a clean, mapped error if denied —
+      // the SDK captures the mic itself internally once the session starts.
+      await navigator.mediaDevices.getUserMedia({ audio: true })
+
+      const tokenRes = await fetch(`${BACKEND_URL}/api/elevenlabs/signed-url`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${CARMEN_JWT}`,
+        },
+      })
+      if (!tokenRes.ok) {
+        throw new Error(`Backend signed-url request failed (${tokenRes.status})`)
+      }
+      const tokenData = await tokenRes.json()
+      const signedUrl = tokenData.signedUrl
+      if (!signedUrl) throw new Error('Backend did not return a signed URL')
+
+      // Loaded on demand: the SDK is ~550KB and only needed once Carmen connects.
+      const { Conversation } = await import('@elevenlabs/client')
+      const conversation = await Conversation.startSession({
+        signedUrl,
+        connectionType: 'websocket',
+        clientTools: {
+          set_expression: async ({ mood }) => {
+            console.log('[useElevenLabsVoice] set_expression called with mood:', mood)
+            if (mood === 'happy' || mood === 'concerned' || mood === 'sad' || mood === 'neutral') {
+              onExpressionChangeRef.current?.(mood)
+            }
+          },
+        },
+        // Fires if the agent tries to call a tool the SDK has no handler for —
+        // e.g. a name mismatch between the agent's stored config and this app.
+        // If set_expression never shows up in either this or the log above, the
+        // agent isn't actually invoking it as a real tool call at all.
+        onUnhandledClientToolCall: (params) => {
+          console.error('[useElevenLabsVoice] unhandled client tool call:', params)
+        },
+        // Unconditional, fires for every transcript chunk — unlike the two logs
+        // above, which only fire if a real (or rejected) tool call happens. This
+        // is the one that shows whether "setexpressionhappy" is literally in her
+        // spoken text (narrated, not invoked) versus something else going on.
+        onMessage: (props) => {
+          console.log('[useElevenLabsVoice] message:', props.role, props.message)
+        },
+        // Every raw incoming event, type only (payloads can be large/frequent —
+        // audio chunks especially). If "client_tool_call" never appears here at
+        // all, the agent isn't attempting the structured call, full stop.
+        onIncomingEvent: (event) => {
+          if (event?.type !== 'audio') console.log('[useElevenLabsVoice] incoming event:', event?.type)
+        },
+        onStatusChange: ({ status: sdkStatus }) => {
+          if (sdkStatus === 'connected') setStatus('connected')
+          else if (sdkStatus === 'connecting') setStatus('connecting')
+          else if (sdkStatus === 'disconnected') {
+            setStatus((current) => (current === 'error' ? current : 'idle'))
+          }
+        },
+        onDisconnect: () => teardown(),
+        onError: (message) => {
+          console.error('[useElevenLabsVoice] error:', message)
+          setError(message)
+          setStatus('error')
+        },
+      })
+
+      conversationRef.current = conversation
+
+      const tick = () => {
+        const level = conversationRef.current?.getOutputVolume() ?? 0
+        speakRef.current += (level - speakRef.current) * 0.35
+        rafRef.current = requestAnimationFrame(tick)
+      }
+      tick()
+    } catch (err) {
+      console.error('[useElevenLabsVoice] connect failed:', err)
+      teardown()
+      setError(describeVoiceError(err))
+      setStatus('error')
+    }
+  }, [status, teardown])
+
+  return { status, error, connect, disconnect, speakRef }
+}
