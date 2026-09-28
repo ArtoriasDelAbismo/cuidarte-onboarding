@@ -108,7 +108,8 @@ export default function IntroDesktop() {
     storeEmergencyPhones(form.telefonoEmergencia1, form.telefonoEmergencia2)
     storeNombre(form.nombre)
     // TODO: send `form` to cuidarte-ia-backend once the patient registration endpoint exists
-    navigate('/cargando')
+    // The desktop Home opens with its own intro sequence, so skip the mobile loading screen
+    navigate('/home')
   }
 
   return (
