@@ -1,0 +1,17 @@
+/* Connection errors (no JWT, microphone blocked…), just under the logo pill */
+.mobile-carmen__error {
+  position: fixed;
+  top: 108px;
+  left: 50%;
+  z-index: 30;
+  width: min(354px, calc(100vw - 48px));
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(0, 63, 68, 0.85);
+  color: var(--white);
+  font-size: 14px;
+  text-align: center;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
