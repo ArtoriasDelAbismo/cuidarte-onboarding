@@ -1,0 +1,104 @@
+/* Rendered inside DesktopScene; the --nav-* and --glass-* tokens come from there. */
+
+/* Figma: 30px left of the nav, bottom-aligned with it */
+.seguridad-desktop__vitals {
+  --gap-to-nav: 30px;
+
+  position: absolute;
+  top: 50%;
+  right: calc(var(--nav-right) + var(--nav-width) + var(--gap-to-nav));
+  width: 240px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateY(calc(var(--nav-height) / 2 - 100%));
+  animation: seguridad-desktop-in 0.5s var(--ease) both;
+}
+
+@keyframes seguridad-desktop-in {
+  from {
+    opacity: 0;
+    translate: 24px 0;
+  }
+}
+
+.seguridad-desktop__vital {
+  width: 100%;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--glass-shadow);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: normal;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.seguridad-desktop__vital:hover,
+.seguridad-desktop__vital:focus-visible,
+.seguridad-desktop__vital--active {
+  background: var(--brand-secondary-2);
+  outline: none;
+}
+
+.seguridad-desktop__vital-icons {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seguridad-desktop__vital-icons img {
+  display: block;
+}
+
+/* Figma: "Videos - Salud" — portrait video in a glass frame, placed left of the vitals column */
+.seguridad-desktop__video {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: calc(var(--nav-right) + var(--nav-width) + 30px + 240px + 30px);
+  height: min(857px, calc(100dvh - 96px));
+  aspect-ratio: 490 / 857;
+  padding: 15px;
+  border-radius: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(4.5px);
+  box-shadow: var(--glass-shadow);
+  transform: translateY(-50%);
+  animation: seguridad-desktop-video-in 0.45s var(--ease) both;
+}
+
+@keyframes seguridad-desktop-video-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.seguridad-desktop__video video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  object-fit: cover;
+  background: var(--brand-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seguridad-desktop__vitals,
+  .seguridad-desktop__video {
+    animation-duration: 0.01ms;
+  }
+}
