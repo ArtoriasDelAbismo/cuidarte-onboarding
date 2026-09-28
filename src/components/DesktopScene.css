@@ -205,8 +205,10 @@
 
 /* ---------- Side nav ---------- */
 
+/* z-index: stays above full-page sections such as Finanzas (z-index 5) */
 .desktop-scene__nav {
   position: absolute;
+  z-index: 6;
   top: 50%;
   right: var(--nav-right);
   width: var(--nav-width);
