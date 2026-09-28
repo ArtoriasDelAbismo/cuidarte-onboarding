@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Salud.css'
 
-import fondo from '../assets/home/fondo-home.jpg'
 import logo from '../assets/home/logo-pill.svg'
 import iconPresionArterial from '../assets/salud/icon-presion-arterial.svg'
 import iconRitmoCardiaco from '../assets/salud/icon-ritmo-cardiaco.svg'
@@ -24,6 +23,7 @@ import videoTemperatura from '../assets/videos/salud/temperatura.mp4'
 import videoEcg from '../assets/videos/salud/ecg.mp4'
 
 import VideoModal from './VideoModal.jsx'
+import MobileStage from './MobileStage.jsx'
 import { notifyVideoOpened } from '../utils/notifyVideoOpened'
 
 const WIDE_CARD = {
@@ -54,7 +54,7 @@ export default function Salud() {
 
   return (
     <div className="salud">
-      <img className="salud__bg" src={fondo} alt="" aria-hidden="true" />
+      <MobileStage />
       <img className="salud__logo" src={logo} alt="Cuidarte.ia" />
 
       <div className="salud__content">
