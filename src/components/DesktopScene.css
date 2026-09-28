@@ -157,8 +157,14 @@
   transition: color 0.2s var(--ease);
 }
 
+.desktop-scene__carmen-link:disabled {
+  cursor: progress;
+}
+
+/* Hover look, also kept while Carmen is awake (or waking) so the button reads as on */
 .desktop-scene__carmen-link:hover,
-.desktop-scene__carmen-link:focus-visible {
+.desktop-scene__carmen-link:focus-visible,
+.desktop-scene__carmen-link--active {
   height: 116px;
   gap: 50px;
   background: rgba(0, 63, 68, 0.3);
@@ -166,13 +172,28 @@
 }
 
 .desktop-scene__carmen-link:hover .desktop-scene__carmen-line1,
-.desktop-scene__carmen-link:focus-visible .desktop-scene__carmen-line1 {
+.desktop-scene__carmen-link:focus-visible .desktop-scene__carmen-line1,
+.desktop-scene__carmen-link--active .desktop-scene__carmen-line1 {
   color: var(--brand-secondary-1);
 }
 
 .desktop-scene__carmen-link:hover .desktop-scene__carmen-line2,
-.desktop-scene__carmen-link:focus-visible .desktop-scene__carmen-line2 {
+.desktop-scene__carmen-link:focus-visible .desktop-scene__carmen-line2,
+.desktop-scene__carmen-link--active .desktop-scene__carmen-line2 {
   color: var(--brand-3);
+}
+
+.desktop-scene__carmen-error {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(0, 63, 68, 0.75);
+  color: var(--white);
+  font-size: 14px;
 }
 
 /* ---------- Side nav ---------- */
