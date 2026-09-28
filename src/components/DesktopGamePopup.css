@@ -1,0 +1,343 @@
+/* Figma: "Pop-ups bienestar". Everything is laid out at the 1395x642 design
+   size; DesktopGamePopup scales the whole frame down on smaller viewports.
+   The Figma panel is drawn rotated -90°, so positions here are converted back. */
+
+.game-popup__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 63, 68, 0.3);
+  animation: game-popup-fade 0.25s ease both;
+}
+
+@keyframes game-popup-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.game-popup {
+  position: relative;
+  flex-shrink: 0;
+  width: 1395px;
+  height: 642px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12.5px);
+  animation: game-popup-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes game-popup-in {
+  from {
+    opacity: 0;
+    translate: 0 24px;
+  }
+}
+
+.game-popup__panel {
+  position: absolute;
+  inset: 14px 15px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--brand-1);
+  color: var(--brand-secondary-1);
+}
+
+/* Green wash on the right third (Figma "Rectangle 39") */
+.game-popup__panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 909px;
+  width: 485px;
+  background: linear-gradient(90deg, rgba(161, 226, 152, 0) 0%, var(--brand-3) 133.52%);
+  pointer-events: none;
+}
+
+.game-popup__panel > * {
+  position: absolute;
+}
+
+.game-popup__close {
+  z-index: 1;
+  top: 27px;
+  right: 31px;
+  width: 142px;
+  height: 44px;
+  padding: 10px;
+  border: 0;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--card-shadow);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.game-popup__close:hover,
+.game-popup__close:focus-visible {
+  background: var(--white);
+  outline: none;
+}
+
+.game-popup__pill {
+  padding: 12px 28px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--brand-3);
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 20px;
+  filter: drop-shadow(0 4px 2px rgba(0, 0, 0, 0.15));
+  cursor: pointer;
+}
+
+.game-popup__pill:hover {
+  background: var(--brand-secondary-2);
+}
+
+/* ---------- Left column (Trivia logo / game status) ---------- */
+
+.game-popup__trivia-logo {
+  top: 50%;
+  left: 40px;
+  width: 252px;
+  transform: translateY(-50%);
+}
+
+.game-popup__side {
+  top: 50%;
+  left: 40px;
+  width: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  transform: translateY(-50%);
+}
+
+.game-popup__side p {
+  margin: 0;
+}
+
+.game-popup__side-title {
+  font-weight: 800;
+  font-size: 40px;
+  line-height: 1.1;
+}
+
+.game-popup__side-copy {
+  font-weight: 700;
+  font-size: 20px;
+  opacity: 0.85;
+}
+
+/* ---------- Trivia ---------- */
+
+.game-popup__trivia-count {
+  top: 110px;
+  left: 319px;
+  width: 92px;
+  height: 56px;
+  padding: 0 10px 0 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+  background: var(--brand-3);
+  color: var(--brand-1);
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.game-popup__trivia-frame {
+  top: 110px;
+  left: 391px;
+  width: 676px;
+  height: 390px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--brand-2);
+  border-radius: 15px;
+}
+
+.game-popup__trivia-question {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  height: 56px;
+  margin: 0;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px 15px 0 0;
+  background: var(--brand-2);
+  font-weight: 800;
+  font-size: 25px;
+  text-align: center;
+}
+
+.game-popup__trivia-options {
+  width: 632px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 70.5px;
+  gap: 25px 20px;
+}
+
+.game-popup__trivia-option {
+  padding: 10px;
+  border: 1px solid var(--brand-secondary-1);
+  border-radius: 15px;
+  background: transparent;
+  backdrop-filter: blur(5.45px);
+  color: var(--brand-secondary-1);
+  font-weight: 700;
+  font-size: 20px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.game-popup__trivia-option:not(:disabled):hover {
+  background: rgba(198, 254, 255, 0.12);
+}
+
+.game-popup__trivia-option:disabled {
+  cursor: default;
+}
+
+.game-popup__trivia-option--correct {
+  border-color: var(--brand-3);
+  background: var(--brand-3);
+  color: var(--brand-1);
+}
+
+.game-popup__trivia-option--wrong {
+  opacity: 0.45;
+}
+
+.game-popup__trivia-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding-top: 56px;
+}
+
+.game-popup__trivia-result p {
+  margin: 0;
+  font-weight: 800;
+  font-size: 30px;
+}
+
+/* ---------- Grids (centered in the panel) ---------- */
+
+.game-popup__grid {
+  top: 50%;
+  left: 50%;
+  display: grid;
+  transform: translate(-50%, -50%);
+}
+
+.game-popup__grid--memotest {
+  grid-template-columns: repeat(4, 144.33px);
+  grid-auto-rows: 144.33px;
+  gap: 18px;
+}
+
+.game-popup__grid--tateti {
+  grid-template-columns: repeat(3, 150.33px);
+  grid-auto-rows: 150.33px;
+  gap: 10px;
+}
+
+.game-popup__grid--puzle {
+  grid-template-columns: repeat(3, 158px);
+  grid-auto-rows: 158px;
+  gap: 18px;
+}
+
+.game-popup__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: var(--brand-3);
+  box-shadow: inset 4px 4px 4.7px 0 rgba(0, 101, 114, 0.33);
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.game-popup__tile:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+.game-popup__tile:disabled {
+  cursor: default;
+}
+
+.game-popup__tile img {
+  display: block;
+}
+
+.game-popup__tile--number {
+  color: var(--brand-1);
+  font-weight: 700;
+  font-size: 35px;
+}
+
+/* Not in Figma: dimmed so the free slot of the sliding puzzle is obvious */
+.game-popup__tile--empty {
+  opacity: 0.3;
+}
+
+.game-popup__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 2px solid var(--brand-3);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.game-popup__cell:not(:disabled):hover {
+  background: rgba(161, 226, 152, 0.12);
+}
+
+.game-popup__cell:disabled {
+  cursor: default;
+}
+
+.game-popup__cell--win {
+  background: rgba(161, 226, 152, 0.3);
+}
+
+.game-popup__cell img {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-popup__overlay,
+  .game-popup {
+    animation-duration: 0.01ms;
+  }
+}
