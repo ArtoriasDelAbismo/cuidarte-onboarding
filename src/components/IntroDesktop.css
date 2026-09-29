@@ -107,6 +107,51 @@
   box-shadow: 0 0 0 2px var(--brand-3);
 }
 
+/* Phone fields: the pill holds a fixed +549 and the 10-digit input */
+.intro-desktop__phone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: text;
+}
+
+.intro-desktop__phone:focus-within {
+  box-shadow: 0 0 0 2px var(--brand-3);
+}
+
+.intro-desktop__phone-prefix {
+  flex-shrink: 0;
+  padding-right: 10px;
+  border-right: 1px solid rgba(198, 254, 255, 0.35);
+  color: var(--brand-secondary-1);
+}
+
+.intro-desktop__phone input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+
+.intro-desktop__phone input::placeholder {
+  color: var(--brand-secondary-2);
+  opacity: 0.3;
+}
+
+/* Format hint above the phone fields; pulls up so it reads with them, not as a field */
+.intro-desktop__hint {
+  margin: -10px 0 -12px 20px;
+  color: var(--brand-secondary-1);
+  font-size: 13px;
+  line-height: 1.3;
+  opacity: 0.85;
+}
+
 .intro-desktop__dropdown {
   position: relative;
 }
